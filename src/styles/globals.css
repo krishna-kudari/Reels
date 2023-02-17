@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components{
+     .auth_input{
+        @apply w-full p-2 border outline-none rounded-md 
+     }
+}
+
+.scroll-thin::-webkit-scrollbar{
+   width: 4px;
+}
+
+.scroll-thin::-webkit-scrollbar-track {
+   background: #FFF;
+}
+.scroll-thin::-webkit-scrollbar-thumb{
+   background: rgb(94, 94, 94);
+   border-radius: 5px;
+}
