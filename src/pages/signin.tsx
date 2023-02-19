@@ -7,6 +7,8 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import {motion, AnimatePresence } from "framer-motion";
 import useFilePReview from "@/hooks/useFilePreview";
+import { ref, uploadBytes } from "firebase/storage";
+import { getStorageRef } from "@/util/functions";
 interface signinProps {}
 
 interface LoginFormData {
@@ -60,16 +62,37 @@ const signin: React.FC<signinProps> = ({}) => {
   //SignUp Form OnSubmit
   const onSubmit_SignUp = handleSubmit_signup(async (data) => {
     console.log("SignupFormData", data);
-    // try {
-    //   const user = await createUser(data.email, data.password);
-    //   console.log(user);
-    // } catch (error: any) {
-    //   console.log(error);
-    //   toast.error(error.message);
-    // } finally {
-    //   setValue("email", "");
-    //   setValue("password", "");
-    // }
+    const profile_pic = data.profile_picture[0];
+    console.log(profile_pic);
+    
+    try {
+      createUser(data.signup_email, data.signup_password).then((userCredential)=>{
+        const user = userCredential.user;
+        console.log(user);
+        const userId = user.uid;
+        const profile_picture_ref = getStorageRef(`users/${userId}/ProfileImage`);
+        uploadBytes(profile_picture_ref,profile_pic);
+        // .then((snapshot)=>{
+        //   console.log(snapshot);
+        // });
+        toast.success("profile_pic uploaded");
+        // const userDoc = {
+
+        // }
+      }).catch((error:any) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(errorCode,errorMessage);
+        toast.error(errorMessage);
+      })
+      
+    } catch (error: any) {
+      console.log(error);
+      toast.error(error.message);
+    } finally {
+      setValue("email", "");
+      setValue("password", "");
+    }
   });
 
   //continue with google
@@ -90,6 +113,7 @@ const signin: React.FC<signinProps> = ({}) => {
     const newUrl = URL.createObjectURL(event.target.files[0]);
     setImageUrl(newUrl);
   }
+
   return (
     <div
       className="h-screen overflow-hidden border flex items-center justify-center"
@@ -334,9 +358,9 @@ const signin: React.FC<signinProps> = ({}) => {
                 Log In
               </button>
             </div>
-            <div className="h-full  px-12 space-y-10">
+            <div className="h-full  px-12 py-[3.2px] space-y-5">
               <div className="space-y-2 ">
-                <p className="font-semibold text-gray-500">SIGNUP</p>
+                {/* <p className="font-semibold text-gray-500">SIGNUP</p> */}
                 {/* <p className="font-medium text-gray-700 text-3xl">
                   CREATE YOUR ACCOUNT
                 </p> */}
@@ -346,6 +370,24 @@ const signin: React.FC<signinProps> = ({}) => {
               </div>
               <div className="">
                 <form onSubmit={onSubmit_SignUp} className="">
+                  {/* <label
+                  htmlFor="signup-username"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Username
+                </label> */}
+                <div className="flex relative mb-6">
+                  <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
+                    @
+                  </span>
+                  <input
+                    type="text"
+                    id="signup-username"
+                    // {...register_signup("signup_username",{required:true,maxLength:32})}
+                    className="rounded-none rounded-r-lg bg-gray-50 border text-gray-900 outline-none focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="elonmusk"
+                  />
+                </div>
                   {/* <label
                   htmlFor="signup-input-email"
                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -373,23 +415,6 @@ const signin: React.FC<signinProps> = ({}) => {
                       placeholder={errors_signup.signup_email ? "email required":"name@⚡✉️.com"}
                     />
                   </div>
-                  {/* <label
-                  htmlFor="signup-username"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Username
-                </label>
-                <div className="flex relative mb-6">
-                  <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
-                    @
-                  </span>
-                  <input
-                    type="text"
-                    id="signup-username"
-                    className="rounded-none rounded-r-lg bg-gray-50 border text-gray-900 outline-none focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="elonmusk"
-                  />
-                </div> */}
                   {/* <label htmlFor="signup-password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your password</label> */}
                   <div className="relative mb-6">
                     <div
@@ -427,7 +452,7 @@ const signin: React.FC<signinProps> = ({}) => {
                     >
                       { imageUrl ? (
                         <div className="relative w-full h-[140px] overflow-auto">
-                          <Image src={imageUrl} alt={"Profile_pic"}  fill className="object-contain aspect-square object-center"/>
+                          <Image src={`${imageUrl}`} alt={"Profile_pic"}  fill className="object-contain aspect-square object-center"/>
                         </div>
                       ) : (
                           <div className="flex flex-col items-center justify-center pt-5 pb-6">
@@ -457,7 +482,7 @@ const signin: React.FC<signinProps> = ({}) => {
                       </div>
                         )}
                       
-                      <input {...register_signup("profile_picture",{required:true})} onChange={profile_pic_preview} id="dropzone-file" type="file" className="hidden" />
+                      <input {...register_signup("profile_picture",{required:true})}  id="dropzone-file" type="file" accept="image/*" className="hidden" />
                     </label>
                   </div>
 

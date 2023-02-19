@@ -37,3 +37,6 @@ next-env.d.ts
 
 #media
 *.mp4
+
+#firebase cred
+src/firebase/app.ts
