@@ -7,8 +7,12 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import {motion, AnimatePresence } from "framer-motion";
 import useFilePReview from "@/hooks/useFilePreview";
-import { ref, uploadBytes } from "firebase/storage";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { getStorageRef } from "@/util/functions";
+import { setDoc, doc } from "firebase/firestore";
+import { userInfo } from "os";
+import { db } from "@/firebase/store";
+import { Router, useRouter } from "next/router";
 interface signinProps {}
 
 interface LoginFormData {
@@ -17,10 +21,11 @@ interface LoginFormData {
 }
 
 const signin: React.FC<signinProps> = ({}) => {
+  const router = useRouter();
   const [imageUrl ,setImageUrl] = useState<string|undefined>();
   const [show, setshow] = useState<boolean>(false);
   const [authAction, setAuthAction] = useState<"Login" | "Signup">("Signup"); //animate state
-  const { signIn, signinWithGoogle, signinWithGitHub, createUser } = useAuth();
+  const {currentUser, signIn, signinWithGoogle, signinWithGitHub, createUser } = useAuth();
   const {
     register,
     setValue,
@@ -71,14 +76,25 @@ const signin: React.FC<signinProps> = ({}) => {
         console.log(user);
         const userId = user.uid;
         const profile_picture_ref = getStorageRef(`users/${userId}/ProfileImage`);
-        uploadBytes(profile_picture_ref,profile_pic);
-        // .then((snapshot)=>{
-        //   console.log(snapshot);
-        // });
-        toast.success("profile_pic uploaded");
-        // const userDoc = {
-
-        // }
+        uploadBytes(profile_picture_ref,profile_pic).then(async (snapshot)=>{
+          console.log(snapshot);
+          const downloadUrl = await getDownloadURL(snapshot.ref);
+          console.log(downloadUrl);
+          const userDoc = {
+            username : data.signup_username,
+            email: data.signup_email,
+            password: data.signup_password,
+            profile_picture_url: downloadUrl,
+            userId,
+          }
+          await setDoc(doc(db, "users", userId), userDoc);
+          toast.success("account created");
+          router.replace("/");
+        }).catch((error:any) =>{
+          const errorMessage = error.message;
+          console.log(error);
+          toast.error(errorMessage);
+        })
       }).catch((error:any) => {
         const errorCode = error.code;
         const errorMessage = error.message;
@@ -383,7 +399,7 @@ const signin: React.FC<signinProps> = ({}) => {
                   <input
                     type="text"
                     id="signup-username"
-                    // {...register_signup("signup_username",{required:true,maxLength:32})}
+                    {...register_signup("signup_username",{required:true,maxLength:32})}
                     className="rounded-none rounded-r-lg bg-gray-50 border text-gray-900 outline-none focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="elonmusk"
                   />

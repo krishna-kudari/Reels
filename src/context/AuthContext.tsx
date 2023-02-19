@@ -19,6 +19,7 @@ type AuthContextType = {
   logOut: () => Promise<void>;
   signinWithGoogle: () => void;
   signinWithGitHub: () => void;
+  loading: boolean;
 };
 
 // 🧱 Create an AuthContext
@@ -29,6 +30,7 @@ const AuthContext = createContext<AuthContextType>({
   logOut: () => Promise.reject(new Error("Not implemented")),
   signinWithGoogle: () => null,
   signinWithGitHub: () => null,
+  loading: true,
 });
 
 // 🧱 Create a costum hook to use the AuthContext
@@ -38,6 +40,7 @@ export const useAuth = () => {
 
 export const AuthProvider: React.FC<ProviderProps> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const signIn = (email: string, password: string): Promise<UserCredential> => {
     return signInWithEmailAndPassword(auth, email, password);
@@ -85,34 +88,37 @@ export const AuthProvider: React.FC<ProviderProps> = ({ children }) => {
       });
   };
   const signinWithGitHub = () => {
-    signInWithPopup(auth, githubprovider).then((result) => {
-      // This gives you a GitHub Access Token. You can use it to access the GitHub API.
-    const credential = GithubAuthProvider.credentialFromResult(result);
-    if (!credential) throw new Error("No credential");
-    const token = credential.accessToken;
+    signInWithPopup(auth, githubprovider)
+      .then((result) => {
+        // This gives you a GitHub Access Token. You can use it to access the GitHub API.
+        const credential = GithubAuthProvider.credentialFromResult(result);
+        if (!credential) throw new Error("No credential");
+        const token = credential.accessToken;
 
-    // The signed-in user info.
-    const user = result.user;
-    // IdP data available using getAdditionalUserInfo(result)
-    // ...
-    }).catch((error:any)=>{
-      // Handle Errors here.
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    // The email of the user's account used.
-    const email = error.customData.email;
-    // The AuthCredential type that was used.
-    const credential = GithubAuthProvider.credentialFromError(error);
-    // ...
-    console.log(credential, email, errorMessage, errorCode);
-    })
-  }
+        // The signed-in user info.
+        const user = result.user;
+        // IdP data available using getAdditionalUserInfo(result)
+        // ...
+      })
+      .catch((error: any) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.customData.email;
+        // The AuthCredential type that was used.
+        const credential = GithubAuthProvider.credentialFromError(error);
+        // ...
+        console.log(credential, email, errorMessage, errorCode);
+      });
+  };
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
+      console.log("AuthState changed",user);
       setCurrentUser(user);
+      setLoading(false);
     });
-
     return unsubscribe;
   }, []);
 
@@ -123,11 +129,12 @@ export const AuthProvider: React.FC<ProviderProps> = ({ children }) => {
     logOut,
     signinWithGoogle,
     signinWithGitHub,
+    loading,
   };
 
   return (
     <AuthContext.Provider value={value}>
-      {currentUser && children}
+      { children}
     </AuthContext.Provider>
   );
 };
