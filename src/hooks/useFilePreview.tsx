@@ -1,11 +1,11 @@
 import { useState , useEffect } from "react";
 
-export default function useFilePReview(file){
-    const [imgSrc, setImgSrc] = useState("");
+export default function useFilePReview(file:File){
+    const [imgSrc, setImgSrc] = useState<string|null>(null);
 
     useEffect(()=>{
-        if(file && file[0]){
-            const newUrl = URL.createObjectURL(file[0]);
+        if(file){
+            const newUrl = URL.createObjectURL(file);
 
             if(newUrl !== imgSrc){
                 setImgSrc(newUrl);
@@ -14,5 +14,4 @@ export default function useFilePReview(file){
     },[file]);
 
     return [imgSrc , setImgSrc];
-
 }
