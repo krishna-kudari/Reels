@@ -1,3 +1,4 @@
+import ThemeButton from "@/components/ThemeButton";
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import Head from "next/head";
@@ -14,6 +15,9 @@ export default function App({ Component, pageProps }: AppProps) {
       </Head>
       <div>
         <Toaster />
+      </div>
+      <div className="fixed top-2 right-4">
+        <ThemeButton />
       </div>
       <Component {...pageProps} />
     </AuthProvider>

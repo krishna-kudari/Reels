@@ -6,12 +6,12 @@ import { useRouter } from "next/router";
 export default function Home() {
   const { loading, currentUser } = useAuth();
   const router = useRouter();
+  
 
   const RedirectSignup = () => {
      router.replace("/signin");
      return <></>
   };
   console.log("Home",loading,currentUser);
-  
-  return <>{loading ? <Loader /> : currentUser ? <div>Feed</div> : <RedirectSignup />}</>;
+  return <>{loading ? <Loader count={4} /> : currentUser ? <div>Feed</div> : <RedirectSignup />}</>;
 }

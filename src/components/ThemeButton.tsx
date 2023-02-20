@@ -1,12 +1,7 @@
 import React, { useEffect } from "react";
 import useLocalStorage from "../hooks/useLocalStorage";
 const ThemeButton = () => {
-  const [theme, setTheme] = useLocalStorage("theme", () => {
-    return window.matchMedia &&
-    window.matchMedia("(prefers-color-scheme: dark)").matches
-      ? "dark"
-      : "light";
-  });
+  const [theme, setTheme] = useLocalStorage("theme", "light");
 
   const handleClick = () => {
     const newTheme = theme === "light" ? "dark" : "light";
@@ -14,6 +9,11 @@ const ThemeButton = () => {
     document.documentElement.classList.toggle("dark");
   };
   useEffect(() => {
+    const systemDefaultTheme = window.matchMedia &&
+    window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
+    
     if (theme != "light") document.documentElement.classList.add(theme);
   }, []);
   
