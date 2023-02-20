@@ -16,7 +16,7 @@ export default function App({ Component, pageProps }: AppProps) {
       <div>
         <Toaster />
       </div>
-      <div className="fixed top-2 right-4">
+      <div className="fixed top-4 left-4">
         <ThemeButton />
       </div>
       <Component {...pageProps} />

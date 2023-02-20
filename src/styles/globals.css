@@ -6,7 +6,30 @@
      .auth_input{
         @apply w-full p-2 border outline-none rounded-md 
      }
+     
 }
+/* @layer utilities {
+   .snap {
+      scroll-snap-type: var(--scroll-snap-direction) var(--scroll-snap-constraint);
+     }
+
+   .snap-y {
+      --scroll-snap-direction: y;
+   }
+
+   .snap-mandatory {
+      --scroll-snap-constraint: mandatory;
+   }
+   .snap-proximity {
+      --scroll-snap-constraint: proximity;
+   }
+   .snap-center {
+      scroll-snap-align: center;
+   }
+   .snap-always {
+      scroll-snap-stop: always;
+   }
+} */
 
 .scroll-thin::-webkit-scrollbar{
    width: 4px;
