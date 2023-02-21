@@ -43,6 +43,13 @@
    border-radius: 5px;
 }
 
+#snap_container::-webkit-scrollbar{
+   width: 0;
+}
+body::-webkit-scrollbar{
+   width: 0;
+}
+
 body{
    margin: 0;
    padding: 0;

@@ -21,6 +21,7 @@ export default function Home() {
   const [posts, setPosts] = useState<Array<DocumentData & { id: string }>>([]);
   const [lastVisible, setLastVisible] = useState<DocumentData | null>(null);
   const [newPostsLoading, setNewPostsLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState("");
 
   const observer = useRef<IntersectionObserver | null>(null);
   const lastPostref = useRef<HTMLDivElement>(null);
@@ -108,6 +109,7 @@ export default function Home() {
       ) : currentUser ? (
         <div
           ref={rootRef}
+          id="snap_container"
           className="snap snap-y snap-mandatory max-h-screen h-screen overflow-y-scroll"
         >
           {posts.map((post, index) => (
@@ -116,15 +118,7 @@ export default function Home() {
               ref={posts.length === index + 1 ? lastPostref : null}
               className=" snap-always snap-center mx-auto rounded-lg w-full h-[80vh] my-[8vh]"
             >
-              {/* <VideoElement   post={post} /> */}
-              <video
-                className="h-full object-cover object-center mx-auto border border-gray-200 rounded-lg dark:border-gray-700"
-                controls
-              >
-                <source src="/reels/three.mp4" type="video/mp4" />
-                <source src="/reels/three.webm" type="video/webm" />
-                Your browser does not support the video tag.
-              </video>
+              <VideoElement   post={post} isActive={post.id == activeTab} setActiveTab={setActiveTab} rootref={rootRef}/>
             </div>
           ))}
         </div>
