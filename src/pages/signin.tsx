@@ -531,7 +531,6 @@ const signin: React.FC<signinProps> = ({}) => {
         )}
           </motion.div>
         </AnimatePresence>
-        
       </div>
     </div>
     
