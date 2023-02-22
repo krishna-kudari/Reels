@@ -10,6 +10,16 @@ module.exports = {
       fontFamily: {
         Inter: ["Inter var", "sans serif"],
       },
+      animation: {
+        "fill-radial": "fill 2s forwards",
+      },
+      keyframes: {
+        fill: {
+          "0% 100%": {
+            background: "radial-gradient(circle, #000 0%, #000 100%)",
+          },
+        },
+      },
     },
   },
   plugins: [],

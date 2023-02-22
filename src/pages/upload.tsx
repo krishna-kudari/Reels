@@ -1,38 +1,77 @@
-import React from "react";
-import { cross } from "@/../public/icons";
+import React, { useState } from "react";
 import Image from "next/image";
+import { useDropzone } from "react-dropzone";
+import { motion, useAnimation } from "framer-motion";
 interface uploadProps {}
 
 const upload: React.FC<uploadProps> = ({}) => {
-  // uploadArea.addEventListener('dragover', (event) => {
-  //   event.preventDefault();
-  //   uploadArea.classList.add('dragover');
-  // });
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [isAnimating, setIsAnimating] = useState<boolean>(false);
+  const [animationCompleted, setAnimationCompleted] = useState(false);
+  const { getRootProps, getInputProps, isDragActive, acceptedFiles } =
+    useDropzone({
+      accept: {
+        "video/mp4": [".mp4"],
+        "video/webm": [".webm"],
+        "video/ogg": [".ogg"],
+      },
+      onDrop: (acceptedFiles) => {
+        setSelectedFile(acceptedFiles[0]);
+        console.log(acceptedFiles);
+        animate();
+      },
+      maxFiles: 1,
+      maxSize: 20000000,
+    });
 
-  // uploadArea.addEventListener('dragleave', (event) => {
-  //   event.preventDefault();
-  //   uploadArea.classList.remove('dragover');
-  // });
-
-  // uploadArea.addEventListener('drop', (event) => {
-  //   event.preventDefault();
-  //   uploadArea.classList.remove('dragover');
-  //   var files = event.dataTransfer.files;
-  //   input.files = files;
-  //   if(files.length > 1) {
-  //     fileName.innerHTML = files.length + "files";
-  //   } else {
-  //     fileName.innerHTML = files[0].name;
-  //   }
-  // });
+  const dropanimation = useAnimation();
+  const checkAnimation = useAnimation();
+  const checkMarkAnimation = useAnimation();
+  const animate = async () => {
+    console.log("animating");
+    setIsAnimating(true);
+    await dropanimation.start({
+      display: 'flex',
+      borderRadius: '50%',
+      inset: '50%'
+    })
+    await dropanimation.start({
+      borderRadius: '0',
+      inset: 0,
+      transition:{duration: 0.3}
+    })
+    await checkAnimation.start({
+      pathLength: 0
+    })
+    await checkMarkAnimation.start({
+      width: '64',
+      height: '64',
+      transition:{delay: 0.5, duration:0}
+    })
+    await checkAnimation.start({
+      pathLength: 1,
+      transition:{duration: 0.3}
+    })
+    await dropanimation.start({
+      inset: '50%',
+      transition: {delay: 1,duration:0.1}
+    })
+    await checkMarkAnimation.start({
+      width:0,
+      height:0,
+    })
+    setIsAnimating(false);
+    setAnimationCompleted(true);
+  };
+  
   return (
     <div className="flex min-h-screen items-center bg-gradient-to-br dark:from-slate-100 dark:to-slate-200 from-slate-700 to-slate-900 ">
-      <div className="mx-auto  flex flex-col rounded-md overflow-hidden bg-white w-[95vw] max-w-3xl border border-slate-100 shadow-sm ">
+      <div className="mx-auto relative flex flex-col rounded-md overflow-hidden bg-white w-[95vw] max-w-3xl border border-slate-100 shadow-sm ">
         <div className="w-full border-b flex justify-between items-center bg-white">
           <p className="text-xl font-bold text-slate-800 p-4 ">
             Upload a video
           </p>
-          <div className=" rounded-full bg-gray-100 p-1 mr-4">
+          <div onClick={animate} className=" rounded-full bg-gray-100 p-1 mr-4">
             <svg
               className="w-5 h-5 text-gray-500"
               fill="currentColor"
@@ -47,8 +86,13 @@ const upload: React.FC<uploadProps> = ({}) => {
         </div>
         <div className="h-full w-full ">
           <label
+            {...getRootProps()}
             htmlFor="video_input_1"
-            className="py-16  flex flex-col justify-center items-center space-y-4"
+            className={`py-16  flex flex-col justify-center items-center space-y-4 cursor-pointer ${
+              isDragActive
+                ? "bg-gray-100 border border-gray-300 border-dashed"
+                : "border border-transparent"
+            }`}
           >
             <div className="">
               <svg
@@ -59,9 +103,9 @@ const upload: React.FC<uploadProps> = ({}) => {
                 stroke="currentColor"
               >
                 <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
                   d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
                 />
               </svg>
@@ -72,20 +116,37 @@ const upload: React.FC<uploadProps> = ({}) => {
                 here drop
               </p>
               <p className="text-center text-xs text-gray-500 dark:text-gray-400">
-                MP4, WebM OR OGG (MAX. 100 MB)
+                MP4, WebM OR OGG (MAX. 20 MB)
               </p>
             </div>
             <div className="p-6 py-3  inline-flex bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-lg text-white">
               Browse
             </div>
           </label>
-          <input
-            type="file"
-            id="video_input_1"
-            hidden
-            placeholder="Upload your Video"
-          />
+          <input {...getInputProps()} />
         </div>
+
+        <motion.div
+          animate={dropanimation}
+          className="absolute rounded-full bg-indigo-500 hidden items-center justify-center text-white overflow-hidden"
+        >
+          <motion.svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={4}
+            animate={checkMarkAnimation}
+            stroke="currentColor"
+            className="w-16 h-16 hidden"
+          >
+            <motion.path
+              animate={checkAnimation}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M4.5 12.75l6 6 9-13.5"
+            />
+          </motion.svg>
+        </motion.div>
       </div>
     </div>
   );
