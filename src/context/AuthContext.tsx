@@ -11,9 +11,13 @@ import {
 } from "firebase/auth";
 import { auth } from "@/firebase/auth";
 import { User, UserCredential } from "firebase/auth";
+import { doc, DocumentData, getDoc } from "firebase/firestore";
+import { db } from "@/firebase/store";
+
+type userData = User & DocumentData;
 
 type AuthContextType = {
-  currentUser: User | null;
+  currentUser: userData | null;
   signIn: (email: string, password: string) => Promise<UserCredential>;
   createUser: (email: string, password: string) => Promise<UserCredential>;
   logOut: () => Promise<void>;
@@ -39,7 +43,7 @@ export const useAuth = () => {
 };
 
 export const AuthProvider: React.FC<ProviderProps> = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [currentUser, setCurrentUser] = useState<userData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   const signIn = (email: string, password: string): Promise<UserCredential> => {
@@ -114,10 +118,26 @@ export const AuthProvider: React.FC<ProviderProps> = ({ children }) => {
   };
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
       console.log("AuthState changed",user);
-      setCurrentUser(user);
-      setLoading(false);
+      if(user) {
+        const docRef = doc(db,"users",user.uid);
+        const docSnap =await getDoc(docRef);
+        if(docSnap.exists()) {
+          console.log("USerData",);
+          const userData = docSnap.data();
+          const currentUser = {...user , ...userData};
+          setCurrentUser(currentUser);
+          console.log(currentUser);
+          setLoading(false);
+        }else{
+          setLoading(false);
+        }
+      }else{
+        setCurrentUser(null);
+        setLoading(false);
+      }
+      
     });
     return unsubscribe;
   }, []);

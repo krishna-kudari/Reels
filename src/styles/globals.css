@@ -2,11 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer components{
-     .auth_input{
-        @apply w-full p-2 border outline-none rounded-md 
-     }
-     
+@layer components {
+  .auth_input {
+    @apply w-full p-2 border outline-none rounded-md slate;
+  }
 }
 /* @layer utilities {
    .snap {
@@ -31,27 +30,56 @@
    }
 } */
 
-.scroll-thin::-webkit-scrollbar{
-   width: 4px;
+.scroll-thin::-webkit-scrollbar {
+  width: 4px;
 }
 
 .scroll-thin::-webkit-scrollbar-track {
-   background: #FFF;
+  background: #fff;
 }
-.scroll-thin::-webkit-scrollbar-thumb{
-   background: rgb(94, 94, 94);
-   border-radius: 5px;
+.scroll-thin::-webkit-scrollbar-thumb {
+  background: rgb(94, 94, 94);
+  border-radius: 5px;
 }
-
-#snap_container::-webkit-scrollbar{
-   width: 0;
-}
-body::-webkit-scrollbar{
-   width: 0;
+#description::-webkit-scrollbar {
+  width: 4px;
 }
 
-body{
-   margin: 0;
-   padding: 0;
-   box-sizing: border-box;
+#description::-webkit-scrollbar-track {
+  background: #fff;
+}
+#description::-webkit-scrollbar-thumb {
+  background: rgb(130, 130, 130);
+  border-radius: 5px;
+}
+
+#snap_container::-webkit-scrollbar {
+  width: 0;
+}
+body::-webkit-scrollbar {
+  width: 0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  --blue: #2196f3;
+  --blue-50: #e3f2fd;
+  --blue-100: #bbdefb;
+  --blue-200: #90caf9;
+  --blue-300: #64b5f6;
+  --blue-400: #42a5f5;
+  --blue-500: #2196f3;
+  --blue-600: #1e88e5;
+  --blue-700: #1976d2;
+  --blue-800: #1565c0;
+  --blue-900: #0d47a1;
+  --blue-100-accent: #82b1ff;
+  --blue-200-accent: #448aff;
+  --blue-400-accent: #2979ff;
+  --blue-700-accent: #2962ff;
+  --white: #FFFFFF;
+  --slate-200:rgb(226, 232, 240);
+  --slate-400: rgb(148, 163, 184);
 }
