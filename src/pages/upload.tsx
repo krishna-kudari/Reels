@@ -113,8 +113,8 @@ const upload: React.FC<uploadProps> = ({}) => {
       {loading ? (
         <Loader count={4} />
       ) : currentUser ? (
-        <div className="flex min-h-screen items-center bg-gradient-to-br dark:from-slate-100 dark:to-slate-200 from-slate-700 to-slate-900 ">
-          {true || animationCompleted && selectedFile ? (
+        <div className="flex min-h-screen items-center bg-gradient-to-br from-slate-100to-slate-200 dark:from-slate-700 dark:to-slate-900 ">
+          {animationCompleted && selectedFile ? (
             <PublishWizard
               video={selectedFile}
               user={currentUser}
@@ -124,17 +124,17 @@ const upload: React.FC<uploadProps> = ({}) => {
               downloadVideoUrl={downloadVideoUrl}
             />
           ) : (
-            <div className="mx-auto relative flex flex-col rounded-md overflow-hidden bg-white w-[95vw] max-w-3xl border border-slate-100 shadow-sm ">
-              <div className="w-full border-b flex justify-between items-center bg-white">
+            <div className="mx-auto relative flex flex-col rounded-md overflow-hidden bg-white dark:bg-gray-700 w-[95vw] max-w-3xl border border-slate-100 dark:border-gray-500 shadow-sm">
+              <div className="w-full border-b dark:border-b-gray-500 flex justify-between items-center bg-white dark:bg-gray-700">
                 <p className="text-xl font-bold text-slate-800 p-4 ">
                   Upload a video
                 </p>
                 <div
                   onClick={() => router.replace("/")}
-                  className=" rounded-full bg-gray-100 p-1 mr-4"
+                  className=" rounded-full bg-gray-100 dark:bg-gray-600 p-1 mr-4"
                 >
                   <svg
-                    className="w-5 h-5 text-gray-500"
+                    className="w-5 h-5 text-gray-500 dark:text-gray-400"
                     fill="currentColor"
                     viewBox="0 -50 700 700"
                     xmlns="http://www.w3.org/2000/svg"
