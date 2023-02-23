@@ -5,9 +5,15 @@ import { storage } from "@/firebase/storage";
 import { db } from "@/firebase/store";
 import useMultistepForm from "@/hooks/useMultistepForm";
 import { uuidv4 } from "@firebase/util";
-import { PhotoIcon } from "@heroicons/react/24/solid";
+import { ArrowRightIcon, PhotoIcon } from "@heroicons/react/24/solid";
 import { User } from "firebase/auth";
-import { doc, DocumentData, serverTimestamp, setDoc, Timestamp } from "firebase/firestore";
+import {
+  doc,
+  DocumentData,
+  serverTimestamp,
+  setDoc,
+  Timestamp,
+} from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { AnimatePresence, motion } from "framer-motion";
 import { FormEvent, useEffect, useState } from "react";
@@ -28,40 +34,27 @@ const INITAL_DATA: FormData = {
 };
 interface PublishWizardProps {
   video: File | null;
-  user: User & DocumentData | null;
+  user: User & DocumentData;
+  setAnimationCompleted: React.Dispatch<React.SetStateAction<boolean>>;
+  postId: string;
+  uploading: boolean;
+  downloadVideoUrl: string;
 }
-const Page: React.FC<PublishWizardProps> = ({ video, user }) => {
+const Page: React.FC<PublishWizardProps> = ({
+  video,
+  user,
+  setAnimationCompleted,
+  postId,
+  uploading,
+  downloadVideoUrl,
+}) => {
   const [data, setData] = useState(INITAL_DATA);
   let [step, setStep] = useState(1);
-  const [postId, setPostId] = useState("");
-  const [uploading, setUploading] = useState(true);
-  const [downoadVideoUrl, setDownoadVideoUrl] = useState("");
   const [videoUrl, setVideoUrl] = useState(() => {
     if (!video) return "";
     return URL.createObjectURL(video);
   });
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    if (!video) {
-      alert("No video selected");
-      return;
-    }
-    const videoUrl = URL.createObjectURL(video);
-    setVideoUrl(videoUrl);
-    const postId = uuidv4();
-    setPostId(postId);
-    console.log("publish useEff");
-    setUploading(true);
-    const post_ref = ref(storage, `posts/${postId}/video`);
-    uploadBytes(post_ref, video).then(async (snapshot) => {
-      console.log("uploaded");
-      const videoDownloadUrl = await getDownloadURL(snapshot.ref);
-      console.log(videoDownloadUrl);
-      setDownoadVideoUrl(videoDownloadUrl);
-      setUploading(false);
-    });
-  }, []);
 
   function updateFields(fields: Partial<FormData>) {
     setData((prev) => {
@@ -91,40 +84,60 @@ const Page: React.FC<PublishWizardProps> = ({ video, user }) => {
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     if (!isLastStep) return next();
-    setLoading(true);
-    const notification = toast.loading("publishing");
+
     console.log(data);
     console.log(video);
-    if(!user) return;
+    if (!user) return;
     let thumbnailUrl = "";
-    if (data.thumbnail) {
-      const thumbnail_ref = ref(storage, `posts/${postId}/thumbnail`);
-      uploadBytes(thumbnail_ref, data.thumbnail).then(async (snapshot) => {
-        console.log("uploaded");
-        const thumbnailDownloadUrl = await getDownloadURL(snapshot.ref);
-        console.log(thumbnailDownloadUrl);
-        thumbnailUrl = thumbnailDownloadUrl;
-        const postDoc = {
-          postId: postId,
-          postVideoUrl: downoadVideoUrl,
-          postThumbnailUrl: thumbnailUrl,
-          createdAt: serverTimestamp(),
-          userId: user.uid,
-          username: user.username,
-          user_profile_pic_url : user.profile_picture_url ,
-          likes: [],
-          comments: [],
-        };
-        await setDoc(doc(db, "posts", postId), postDoc);
-        toast.success("published",{
-          id: notification
+    if (data.thumbnail && !!downloadVideoUrl) {
+      console.log(downloadVideoUrl);
+      setLoading(true);
+      const notification = toast.loading("publishing");
+      try {
+        const thumbnail_ref = ref(storage, `posts/${postId}/thumbnail`);
+        uploadBytes(thumbnail_ref, data.thumbnail).then(async (snapshot) => {
+          console.log("uploaded Thumbnail");
+          const thumbnailDownloadUrl = await getDownloadURL(snapshot.ref);
+          console.log(thumbnailDownloadUrl);
+          thumbnailUrl = thumbnailDownloadUrl;
+          const postDoc = {
+            postId: postId,
+            postVideoUrl: downloadVideoUrl,
+            postThumbnailUrl: thumbnailUrl,
+            createdAt: serverTimestamp(),
+            postTitle: data.videoTitle,
+            description: data.videoDescription,
+            userId: user.uid,
+            username: user.username,
+            user_profile_pic_url: user.profile_picture_url,
+            likes: [],
+            comments: [],
+            visibility: data.visibility,
+          };
+          await setDoc(doc(db, "posts", postId), postDoc);
+          toast.success("published", {
+            id: notification,
+          });
+          //animate
+          setAnimationCompleted(false);
         });
-      });
+      } catch (error: any) {
+        console.log(error);
+        toast.error("whoops! something went wrong",{id:notification});
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      if (uploading) {
+        toast.error("wait uploading vedio");
+      } else {
+        toast.error("please choose a thumbnail");
+      }
     }
   }
 
   return (
-    <div className="mx-auto min-h-[90vh]  w-full max-w-7xl rounded bg-white shadow flex flex-col">
+    <div className="mx-auto min-h-[80vh]  w-full max-w-6xl rounded bg-white shadow flex flex-col">
       <div className="flex justify-between rounded p-8">
         {steps.map((_: any, index: number) => (
           <Step key={index + 1} step={index + 1} currentStep={step} />
@@ -137,6 +150,7 @@ const Page: React.FC<PublishWizardProps> = ({ video, user }) => {
             type="button"
             onClick={() => {
               setStep(step > 1 ? step - 1 : step);
+              if(step == 1){setAnimationCompleted(false)}
               back();
             }}
             className="rounded px-2 py-1 hover:bg-gray-200  text-slate-400 hover:text-slate-700"
@@ -149,9 +163,9 @@ const Page: React.FC<PublishWizardProps> = ({ video, user }) => {
               setStep(step < steps.length ? step + 1 : step);
               onSubmit(e);
             }}
-            className={`bg flex items-center justify-center rounded-full bg-blue-500 py-1.5 px-3.5 font-medium tracking-tight text-white hover:bg-blue-600 active:bg-blue-700`}
+            className={`bg flex items-center justify-center rounded-full bg-blue-500 p-2 font-medium tracking-tight text-white hover:bg-blue-600 active:bg-blue-700`}
           >
-            Continue
+            <ArrowRightIcon className="white w-4 h-4 " />
           </button>
         </div>
       </div>
@@ -242,12 +256,12 @@ let backgroundVariants = {
   },
   active: {
     background: "var(--white)",
-    borderColor: "var(--blue-500)",
-    color: "var(--blue-500)",
+    borderColor: "var(--indigo-500)",
+    color: "var(--indigo-500)",
   },
   complete: {
-    background: "var(--blue-500)",
-    borderColor: "var(--blue-500)",
+    background: "var(--indigo-500)",
+    borderColor: "var(--indigo-500)",
   },
 };
 
@@ -260,10 +274,10 @@ let rippleTransition = {
 
 let rippleVariants = {
   inactive: {
-    background: "var(--blue-200)",
+    background: "var(--indigo-200)",
   },
   active: {
-    background: "var(--blue-200)",
+    background: "var(--indigo-200)",
     scale: 1,
     transition: {
       duration: t(0.3),
@@ -272,7 +286,7 @@ let rippleVariants = {
     },
   },
   complete: {
-    background: "var(--blue-200)",
+    background: "var(--indigo-200)",
     scale: 1.25,
   },
 };

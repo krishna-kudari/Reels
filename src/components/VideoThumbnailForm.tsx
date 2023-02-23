@@ -48,7 +48,7 @@ const VideoThumbnailForm: React.FC<VideoThumbnailFormProps> = ({
         <div className="flex space-x-6  bg-white">
           <label
             htmlFor="thumbnail"
-            className="bg-gray-50 dark:bg-gray-900 w-64 border-2 rounded-lg border-dashed"
+            className="bg-gray-50 dark:bg-gray-900 w-40 border-2 rounded-lg border-dashed"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

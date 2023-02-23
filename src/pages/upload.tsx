@@ -6,6 +6,10 @@ import PublishWizard from "@/components/PublishWizard";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/router";
 import Loader from "@/components/Loader";
+import { storage } from "@/firebase/storage";
+import { uuidv4 } from "@firebase/util";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import toast from "react-hot-toast";
 interface uploadProps {}
 
 const upload: React.FC<uploadProps> = ({}) => {
@@ -13,6 +17,9 @@ const upload: React.FC<uploadProps> = ({}) => {
   const { loading, currentUser } = useAuth();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
+  const [postId, setPostId] = useState("");
+  const [uploading, setUploading] = useState(false);
+  const [downloadVideoUrl, setDownloadVideoUrl] = useState("");
   const [animationCompleted, setAnimationCompleted] = useState(false);
   const { getRootProps, getInputProps, isDragActive, acceptedFiles } =
     useDropzone({
@@ -23,6 +30,7 @@ const upload: React.FC<uploadProps> = ({}) => {
       },
       onDrop: (acceptedFiles) => {
         setSelectedFile(acceptedFiles[0]);
+        uploadVideo(acceptedFiles[0]);
         console.log(acceptedFiles);
         animate();
       },
@@ -30,6 +38,31 @@ const upload: React.FC<uploadProps> = ({}) => {
       maxSize: 20000000,
     });
 
+  function uploadVideo(video: File) {
+    if (!video) {
+      alert("No video selected");
+      return setAnimationCompleted(false);
+    }
+    console.log("publish useEff");
+    setUploading(true);
+    try {
+      const postId = uuidv4();
+      setPostId(postId);
+      const post_ref = ref(storage, `posts/${postId}/video`);
+      uploadBytes(post_ref, video).then(async (snapshot) => {
+        console.log("uploaded");
+        const videoDownloadUrl = await getDownloadURL(snapshot.ref);
+        console.log(videoDownloadUrl);
+        setDownloadVideoUrl(videoDownloadUrl);
+      });
+    } catch (error: any) {
+      setPostId("");
+      console.log("uploadVideo Error:", error);
+      toast.error("whoops! something wnet wrong");
+    } finally {
+      setUploading(false);
+    }
+  }
   const dropanimation = useAnimation();
   const checkAnimation = useAnimation();
   const checkMarkAnimation = useAnimation();
@@ -74,14 +107,22 @@ const upload: React.FC<uploadProps> = ({}) => {
     router.replace("/signin");
     return <></>;
   }
+
   return (
     <>
       {loading ? (
         <Loader count={4} />
       ) : currentUser ? (
         <div className="flex min-h-screen items-center bg-gradient-to-br dark:from-slate-100 dark:to-slate-200 from-slate-700 to-slate-900 ">
-          {animationCompleted ? (
-            <PublishWizard video={selectedFile} user={currentUser} />
+          {true || animationCompleted && selectedFile ? (
+            <PublishWizard
+              video={selectedFile}
+              user={currentUser}
+              setAnimationCompleted={setAnimationCompleted}
+              uploading={uploading}
+              postId={postId}
+              downloadVideoUrl={downloadVideoUrl}
+            />
           ) : (
             <div className="mx-auto relative flex flex-col rounded-md overflow-hidden bg-white w-[95vw] max-w-3xl border border-slate-100 shadow-sm ">
               <div className="w-full border-b flex justify-between items-center bg-white">
