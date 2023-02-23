@@ -119,6 +119,7 @@ const Page: React.FC<PublishWizardProps> = ({
             id: notification,
           });
           //animate
+          setStep(steps.length+1);
           setAnimationCompleted(false);
         });
       } catch (error: any) {
@@ -137,7 +138,7 @@ const Page: React.FC<PublishWizardProps> = ({
   }
 
   return (
-    <div className="mx-auto min-h-[80vh]  w-full max-w-6xl rounded bg-white shadow flex flex-col">
+    <div className="mx-auto min-h-[80vh]  w-full max-w-6xl rounded bg-white dark:bg-gray-700 border-slate-100 dark:border-gray-500 shadow flex flex-col">
       <div className="flex justify-between rounded p-8">
         {steps.map((_: any, index: number) => (
           <Step key={index + 1} step={index + 1} currentStep={step} />
@@ -153,7 +154,7 @@ const Page: React.FC<PublishWizardProps> = ({
               if(step == 1){setAnimationCompleted(false)}
               back();
             }}
-            className="rounded px-2 py-1 hover:bg-gray-200  text-slate-400 hover:text-slate-700"
+            className="rounded px-2 py-1 hover:bg-gray-200  text-slate-400 dark:hover:bg-slate-600 dark:hover:text-white hover:text-slate-700"
           >
             Back
           </button>

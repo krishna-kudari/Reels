@@ -31,7 +31,7 @@ const VideoThumbnailForm: React.FC<VideoThumbnailFormProps> = ({
   return (
     <FormWrapper title="Thumbnail">
       <div className="px-4">
-        <p className="text-sm font-medium text-gray-500 mb-8">
+        <p className="text-sm font-medium text-gray-300 mb-8">
           Choose or upload an image that will show the video is about. <br /> A
           good miniature is one that stands out and attracts the attention of
           viewers.{" "}
@@ -45,16 +45,16 @@ const VideoThumbnailForm: React.FC<VideoThumbnailFormProps> = ({
           </a>
         </p>
 
-        <div className="flex space-x-6  bg-white">
+        <div className="flex space-x-6  bg-white dark:bg-gray-700">
           <label
             htmlFor="thumbnail"
-            className="bg-gray-50 dark:bg-gray-900 w-40 border-2 rounded-lg border-dashed"
+            className="bg-gray-50 dark:bg-gray-800 w-40 border-2 dark:border-gray-500 rounded-lg border-dashed"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
               fill="none"
-              className="w-full aspect-square object-contain opacity-60"
+              className="w-full aspect-square object-contain opacity-60 dark:text-gray-300"
             >
               <path
                 stroke="currentColor"
@@ -81,7 +81,7 @@ const VideoThumbnailForm: React.FC<VideoThumbnailFormProps> = ({
             />
           </label>
           {imageUrl && (
-            <div className="relative w-64 border rounded-md overflow-hidden">
+            <div className="bg-gradient-to-t  relative w-40 border dark:border-gray-500 shadow-sm rounded-md overflow-hidden">
               <Image
                 className="object-contain object-center aspect-square w-full h-full"
                 fill

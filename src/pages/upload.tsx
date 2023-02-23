@@ -32,7 +32,7 @@ const upload: React.FC<uploadProps> = ({}) => {
         setSelectedFile(acceptedFiles[0]);
         uploadVideo(acceptedFiles[0]);
         console.log(acceptedFiles);
-        animate();
+        if(selectedFile)animate();
       },
       maxFiles: 1,
       maxSize: 20000000,
@@ -54,6 +54,7 @@ const upload: React.FC<uploadProps> = ({}) => {
         const videoDownloadUrl = await getDownloadURL(snapshot.ref);
         console.log(videoDownloadUrl);
         setDownloadVideoUrl(videoDownloadUrl);
+        toast.success("video uploaded");
       });
     } catch (error: any) {
       setPostId("");
@@ -113,8 +114,8 @@ const upload: React.FC<uploadProps> = ({}) => {
       {loading ? (
         <Loader count={4} />
       ) : currentUser ? (
-        <div className="flex min-h-screen items-center bg-gradient-to-br from-slate-100to-slate-200 dark:from-slate-700 dark:to-slate-900 ">
-          {animationCompleted && selectedFile ? (
+        <div className="flex min-h-screen items-center bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-900 ">
+          {true || animationCompleted && selectedFile ? (
             <PublishWizard
               video={selectedFile}
               user={currentUser}
@@ -126,7 +127,7 @@ const upload: React.FC<uploadProps> = ({}) => {
           ) : (
             <div className="mx-auto relative flex flex-col rounded-md overflow-hidden bg-white dark:bg-gray-700 w-[95vw] max-w-3xl border border-slate-100 dark:border-gray-500 shadow-sm">
               <div className="w-full border-b dark:border-b-gray-500 flex justify-between items-center bg-white dark:bg-gray-700">
-                <p className="text-xl font-bold text-slate-800 p-4 ">
+                <p className="text-xl font-bold text-slate-800 dark:text-gray-300 p-4 ">
                   Upload a video
                 </p>
                 <div
@@ -151,7 +152,7 @@ const upload: React.FC<uploadProps> = ({}) => {
                   htmlFor="video_input_1"
                   className={`py-16  flex flex-col justify-center items-center space-y-4 cursor-pointer ${
                     isDragActive
-                      ? "bg-gray-100 border border-gray-300 border-dashed"
+                      ? "bg-gray-100 dark:bg-slate-500 border border-gray-300 dark:border-slate-400 border-dashed"
                       : "border border-transparent"
                   }`}
                 >
@@ -180,7 +181,7 @@ const upload: React.FC<uploadProps> = ({}) => {
                       MP4, WebM OR OGG (MAX. 20 MB)
                     </p>
                   </div>
-                  <div className="p-6 py-3  inline-flex bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-lg text-white">
+                  <div className="p-6 py-3 inline-flex bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-lg text-white">
                     Browse
                   </div>
                 </label>

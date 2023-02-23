@@ -60,7 +60,12 @@ body::-webkit-scrollbar {
   width: 0;
 }
 
-body {
+html.dark {
+  --white: #334155;
+  --slate-200: #64748B;
+}
+
+html {
   margin: 0;
   padding: 0;
   box-sizing: border-box;

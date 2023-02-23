@@ -47,9 +47,8 @@ const VideoDetailsForm: React.FC<VideoDetailsFormProps & {videoUrl : string;uplo
           ></textarea>
       </div>
       <div className="w-2/5">
-        <div className="w-full h-60 border rounded-md overflow-hidden bg-slate-700">
-        <video src={videoUrl} controls className="w-full h-full object-contain"></video>
-        
+        <div className="w-full h-60 border dark:border-gray-500 rounded-md overflow-hidden bg-slate-700">
+        <video src={videoUrl} controls className="w-full h-full object-contain"></video> 
         </div>
       </div>
     </div>

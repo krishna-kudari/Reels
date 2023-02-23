@@ -13,7 +13,7 @@ const VideoVisibiityForm: React.FC<VideoVisibiityFormProps> = ({visibility,updat
     <FormWrapper title="Visibility">
       <div className=" w-full h-full px-8">
         <div className="flex space-x-6">
-          <div className={`flex items-center px-4 border ${visibility=='public' && 'bg-gray-200'} border-gray-200 rounded dark:border-gray-700`}>
+          <div className={`flex items-center px-4 border ${visibility=='public' && 'bg-gray-200 dark:bg-gray-400'} border-gray-200 rounded dark:border-gray-400`}>
             <input
               id="publicVideo"
               type="radio"
@@ -24,12 +24,12 @@ const VideoVisibiityForm: React.FC<VideoVisibiityFormProps> = ({visibility,updat
             />
             <label
               htmlFor="publicVideo"
-              className="w-full cursor-pointer py-4 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+              className={`w-full cursor-pointer py-4 ml-2 text-sm font-medium text-gray-900 ${ visibility=='public' ? ' dark:text-gray-800' :'dark:text-gray-200' }`}
             >
               Public
             </label>
           </div>
-          <div className={`flex items-center px-4 border ${ visibility=='private' && 'bg-gray-200'} border-gray-200 rounded dark:border-gray-700`}>
+          <div className={`flex items-center px-4 border ${ visibility=='private' && 'bg-gray-200 dark:bg-gray-400'} border-gray-200 rounded dark:border-gray-400`}>
             <input
               id="privateVideo"
               type="radio"
@@ -40,7 +40,7 @@ const VideoVisibiityForm: React.FC<VideoVisibiityFormProps> = ({visibility,updat
             />
             <label
               htmlFor="privateVideo"
-              className="w-full cursor-pointer py-4 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+              className={`w-full cursor-pointer py-4 ml-2 text-sm font-medium text-gray-900  ${ visibility=='private' ? ' dark:text-gray-800' :'dark:text-gray-200' }`}
             >
               Private
             </label>
