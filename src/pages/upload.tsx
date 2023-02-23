@@ -130,7 +130,7 @@ const upload: React.FC<uploadProps> = ({}) => {
                   Upload a video
                 </p>
                 <div
-                  onClick={animate}
+                  onClick={() => router.replace("/")}
                   className=" rounded-full bg-gray-100 p-1 mr-4"
                 >
                   <svg
