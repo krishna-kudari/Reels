@@ -29,10 +29,11 @@ const upload: React.FC<uploadProps> = ({}) => {
         "video/ogg": [".ogg"],
       },
       onDrop: (acceptedFiles) => {
+        if(acceptedFiles.length == 0)return;
         setSelectedFile(acceptedFiles[0]);
         uploadVideo(acceptedFiles[0]);
         console.log(acceptedFiles);
-        if(selectedFile)animate();
+        animate();
       },
       maxFiles: 1,
       maxSize: 20000000,
@@ -115,7 +116,7 @@ const upload: React.FC<uploadProps> = ({}) => {
         <Loader count={4} />
       ) : currentUser ? (
         <div className="flex min-h-screen items-center bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-900 ">
-          {true || animationCompleted && selectedFile ? (
+          { animationCompleted && selectedFile ? (
             <PublishWizard
               video={selectedFile}
               user={currentUser}
@@ -190,7 +191,7 @@ const upload: React.FC<uploadProps> = ({}) => {
 
               <motion.div
                 animate={dropanimation}
-                className="absolute rounded-full bg-indigo-500 hidden items-center justify-center text-white overflow-hidden"
+                className="absolute rounded-full bg-indigo-500 hidden inset-1/2 items-center justify-center text-white overflow-hidden"
               >
                 <motion.svg
                   xmlns="http://www.w3.org/2000/svg"
