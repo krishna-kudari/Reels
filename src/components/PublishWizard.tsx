@@ -199,7 +199,7 @@ function Step({ step, currentStep }: stepProps) {
       <motion.div
         variants={backgroundVariants}
         transition={backgroundTransition}
-        className="relative flex h-10 w-10 items-center justify-center rounded-full border-2 border-slate-400 bg-white font-semibold text-slate-500"
+        className={` ${status == 'inactive' && 'bg-slate-200 border-gray-400 dark:border-gray-500 dark:bg-gray-600'} relative flex h-10 w-10 items-center justify-center rounded-full border-2 border-slate-400 bg-white font-semibold text-slate-500`}
       >
         <div className="relative flex items-center justify-center">
           <AnimatePresence>
