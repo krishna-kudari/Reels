@@ -123,7 +123,7 @@ const VideoElement: React.FC<VideoElementProps> = ({
         <div className="opacity-0 hover:opacity-100 absolute z-20 bg-gradient-to-t bg-opacity-5 from-gray-900 via-transparent to-black w-full h-full">
           {!isPlaying ? <PlayIcon className=" absolute top-2 left-2 w-8 h-8 text-white" onClick={togglePlay} /> : <PauseIcon className="w-8 h-8 absolute top-2 left-2 text-white" onClick={togglePlay} />}
           <div className="absolute flex flex-col bottom-0 w-full ">
-            <p className="text-lg font-semibold text-gray-100 px-4 py-2">{post.postTitle}</p>
+            <p className="text-lg font-semibold text-gray-100 px-4 py-2 truncate">{post.postTitle}</p>
             <div className="flex justify-between px-4 py-2">
               <div className="inline-flex items-center">
                 <div className="relative w-10 h-10 p-1 rounded-full ">
