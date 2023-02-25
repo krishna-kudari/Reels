@@ -125,6 +125,7 @@ export default function Home() {
                 setActiveTab={setActiveTab}
                 rootref={rootRef}
                 observer = {observer}
+                user={currentUser}
               />
             </div>
           ))}

@@ -1,3 +1,4 @@
+import { db } from "@/firebase/store";
 import useVideoPlayer from "@/hooks/useVideoPlayerDev";
 import {
   ArrowDownTrayIcon,
@@ -10,7 +11,8 @@ import {
   SpeakerWaveIcon,
   SpeakerXMarkIcon,
 } from "@heroicons/react/24/solid";
-import { DocumentData } from "firebase/firestore";
+import { User } from "firebase/auth";
+import { arrayRemove, arrayUnion, doc, DocumentData, updateDoc } from "firebase/firestore";
 import Image from "next/image";
 import React, {
   Dispatch,
@@ -21,6 +23,7 @@ import React, {
   useRef,
   useState,
 } from "react";
+import toast from "react-hot-toast";
 
 interface VideoElementProps {
   post: DocumentData & { id: string };
@@ -28,6 +31,7 @@ interface VideoElementProps {
   isActive: boolean;
   setActiveTab: Dispatch<SetStateAction<string>>;
   observer: MutableRefObject<IntersectionObserver | null>;
+  user: User
 }
 
 const VideoElement: React.FC<VideoElementProps> = ({
@@ -36,6 +40,7 @@ const VideoElement: React.FC<VideoElementProps> = ({
   isActive,
   setActiveTab,
   observer: rootObserver,
+  user
 }) => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const {
@@ -46,7 +51,10 @@ const VideoElement: React.FC<VideoElementProps> = ({
     handleOnTimeUpdate,
     progress,
   } = useVideoPlayer({ videoElement: videoRef });
-
+  const [liked, setLiked] = useState<boolean>(()=>{
+    if(post.likes.includes(user.uid))return true;
+    return false;
+  })
   const playVideo = () => {
     console.log("PlayVideo called--", post.id);
     if (videoRef.current) {
@@ -62,7 +70,7 @@ const VideoElement: React.FC<VideoElementProps> = ({
       videoRef.current.muted = true;
     }
   };
-
+  
   const reference = useRef<HTMLDivElement>(null);
   const observer = useRef<IntersectionObserver | null>(null);
 
@@ -102,6 +110,42 @@ const VideoElement: React.FC<VideoElementProps> = ({
     togglePlay();
   };
 
+  const handleLike = async () => {
+    if(!isActive) return;
+    console.log("handleLike called", post.id);
+    //animate
+    if(!liked){
+      try {
+        const postId = post.id
+        const postRef = doc(db,'posts',postId);
+        await updateDoc(postRef, {
+          likes: arrayUnion(user.uid)
+        });
+      setLiked(true);
+      } catch (error) {
+        console.log("like Error",error);
+        toast.error("whoops! something went wrong");
+      }
+    }
+  }
+  const handleDislike = async () => {
+    if(!isActive) return;
+    console.log("handleLike called", post.id);
+    //animate
+    if(liked){
+      try {
+        const postId = post.id
+        const postRef = doc(db,'posts',postId);
+        await updateDoc(postRef, {
+          likes: arrayRemove(user.uid)
+        });
+      setLiked(false);
+      } catch (error) {
+        console.log("like Error",error);
+        toast.error("whoops! something went wrong");
+      }
+    }
+  }
   return (
     <div ref={reference} className="h-full flex justify-center space-x-1">
       <div
@@ -175,8 +219,8 @@ const VideoElement: React.FC<VideoElementProps> = ({
         </div>
       </div>
       <div className="flex flex-col justify-end p-3 space-y-8 rounded-md ">
-        <HandThumbUpIcon className=" videoplayer_element" />
-        <HandThumbDownIcon className="videoplayer_element " />
+        <HandThumbUpIcon onClick={handleLike} className={`videoplayer_element ${liked && 'text-[#FF0084]'}`}   />
+        <HandThumbDownIcon onClick={handleDislike} className={`videoplayer_element ${!liked && 'text-white bg-gray-500'}`} />
         <ChatBubbleBottomCenterTextIcon className=" videoplayer_element" />
         <ArrowDownTrayIcon className="  videoplayer_element" />
         <EllipsisHorizontalCircleIcon className="videoplayer_element " />

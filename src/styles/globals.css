@@ -7,7 +7,7 @@
     @apply w-full p-2 border outline-none rounded-md slate;
   }
   .videoplayer_element {
-    @apply h-12 w-12 p-3 rounded-full bg-gray-200 
+    @apply h-12 w-12 p-3 rounded-full bg-gray-200  cursor-pointer
   }
 }
 /* @layer utilities {
