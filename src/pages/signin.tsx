@@ -137,7 +137,7 @@ const signin: React.FC<signinProps> = ({}) => {
         background: "linear-gradient(135deg,white 0% 50%, #000 50% 100%)",
       }}
     >
-      <div className="flex bg-white rounded-lg overflow-hidden shadow shadow-gray-700 min-w-[80vw]">
+      <div className="flex bg-white rounded-3xl overflow-hidden shadow shadow-gray-700 min-w-[80vw]">
         <div className=" hidden md:flex w-[45%] z-10 bg-gray-50 flex-col justify-between">
           <div className="flex space-x-1 p-4 px-8 items-center ">
             <div className="relative  h-5 w-5 ">

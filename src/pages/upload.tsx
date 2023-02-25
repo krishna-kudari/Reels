@@ -31,7 +31,7 @@ const upload: React.FC<uploadProps> = ({}) => {
       onDrop: (acceptedFiles) => {
         if(acceptedFiles.length == 0)return;
         setSelectedFile(acceptedFiles[0]);
-        uploadVideo(acceptedFiles[0]);
+        // uploadVideo(acceptedFiles[0]);
         console.log(acceptedFiles);
         animate();
       },
@@ -126,7 +126,7 @@ const upload: React.FC<uploadProps> = ({}) => {
               downloadVideoUrl={downloadVideoUrl}
             />
           ) : (
-            <div className="mx-auto relative flex flex-col rounded-md overflow-hidden bg-white dark:bg-gray-700 w-[95vw] max-w-3xl border border-slate-100 dark:border-gray-500 shadow-sm">
+            <div className="mx-auto relative flex flex-col rounded-3xl overflow-hidden bg-white dark:bg-gray-700 w-[95vw] max-w-3xl border border-slate-100 dark:border-gray-500 shadow-sm">
               <div className="w-full border-b dark:border-b-gray-500 flex justify-between items-center bg-white dark:bg-gray-700">
                 <p className="text-xl font-bold text-slate-800 dark:text-gray-300 p-4 ">
                   Upload a video

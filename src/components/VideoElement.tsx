@@ -195,7 +195,7 @@ const VideoElement: React.FC<VideoElementProps> = ({
             alt="thumbnail"
           />
         )}
-        <div className="opacity-0 hover:opacity-100 absolute z-20 bg-gradient-to-t bg-opacity-5 from-gray-900 via-transparent to-black w-full h-full">
+        <div className="opacity-0 hover:opacity-100 absolute z-20 bg-gradient-to-t bg-opacity-5 from-gray-900 via-transparent to-transparent w-full h-full">
           {!isPlaying ? (
             <PlayIcon
               className=" absolute top-2 left-2 w-8 h-8 text-white"
@@ -207,6 +207,32 @@ const VideoElement: React.FC<VideoElementProps> = ({
               onClick={togglePlay}
             />
           )}
+          <div className="sm:hidden  absolute right-0 top-1/2 transform-cpu -translate-y-1/2 flex flex-col justify-end p-3 space-y-8 rounded-md ">
+        <HeartIcon
+          onClick={handleLike}
+          className={`videoplayer_element_onscreen ${liked && "text-[#FF0084] dark:text-[#FF0084]"}`}
+        />
+        <HandThumbDownIcon
+          onClick={handleDislike}
+          className={`videoplayer_element_onscreen ${
+            !liked && "text-gray-900 bg-white bg-opacity-25 backdrop-blur-md"
+          }`}
+        />
+        
+        <ChatBubbleBottomCenterTextIcon className=" videoplayer_element_onscreen" />
+        <EllipsisHorizontalCircleIcon className="videoplayer_element_onscreen " />
+        {isMuted ? (
+          <SpeakerXMarkIcon
+            className=" videoplayer_element_onscreen "
+            onClick={toggleMute}
+          />
+        ) : (
+          <SpeakerWaveIcon
+            className=" videoplayer_element_onscreen text-white h-10 w-10 bg-gray-900 bg-opacity-10 backdrop-blur-md p-2 rounded-full"
+            onClick={toggleMute}
+          />
+        )}
+      </div>
           <div className="absolute flex flex-col bottom-0 w-full ">
             <p className="text-base font-normal text-gray-100 px-4 py-1 truncate">
               {post.postTitle}
@@ -242,7 +268,7 @@ const VideoElement: React.FC<VideoElementProps> = ({
           </div>
         </div>
       </div>
-      <div className="flex flex-col justify-end p-3 space-y-8 rounded-md ">
+      <div className="hidden sm:flex flex-col justify-end p-3 space-y-8 rounded-md ">
         <HeartIcon
           onClick={handleLike}
           className={`videoplayer_element ${liked && "text-[#FF0084] dark:text-[#FF0084]"}`}

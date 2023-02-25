@@ -87,10 +87,11 @@ const VideoThumbnailForm: React.FC<
           </a>
         </p>
         <div className="flex space-x-2">
-          <div className="flex-1 py-4 border-2 border-dashed w-3/5 flex flex-wrap space-x-6  bg-slate-100  rounded-lg dark:bg-gray-700">
+          <div className="flex-1 py-4 h-min border-2 border-dashed w-3/5 flex flex-wrap space-x-6 space-y-2 bg-slate-100 rounded-lg dark:bg-gray-700">
             <label
               htmlFor="thumbnail"
-              className="bg-gray-50 dark:bg-gray-800 w-40 h-40 border dark:border-gray-500 rounded-lg border-dashed"
+              title="Browse thumbnail"
+              className="bg-gray-50 dark:bg-gray-800 w-40 h-40 ml-6 border dark:border-gray-500 rounded-lg border-dashed cursor-pointer"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -116,6 +117,7 @@ const VideoThumbnailForm: React.FC<
                 id="thumbnail"
                 type="file"
                 accept="image/*"
+                title="Browse thumbnail"
                 hidden
                 required
                 placeholder={"Browse"}

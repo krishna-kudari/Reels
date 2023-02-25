@@ -9,6 +9,9 @@
   .videoplayer_element {
     @apply h-12 w-12 p-3 rounded-full bg-gray-200 dark:text-white dark:bg-black cursor-pointer dark:bg-opacity-20 backdrop-blur
   }
+  .videoplayer_element_onscreen {
+    @apply text-white h-10 w-10 bg-gray-900 bg-opacity-10 backdrop-blur-md p-2 rounded-full
+  }
 }
 /* @layer utilities {
    .snap {
