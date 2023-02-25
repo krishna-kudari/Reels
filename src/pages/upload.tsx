@@ -113,7 +113,7 @@ const upload: React.FC<uploadProps> = ({}) => {
   return (
     <>
       {loading ? (
-        <Loader count={4} />
+        <Loader count={1} className={"animate-pulse top-32 bg-slate-50 border relative border-gray-100 shadow rounded-3xl mt-[5vh] w-full mx-auto mb-6 max-w-[80vh] min-h-[60vh]"} />
       ) : currentUser ? (
         <div className="flex min-h-screen items-center bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-900 ">
           { animationCompleted && selectedFile ? (

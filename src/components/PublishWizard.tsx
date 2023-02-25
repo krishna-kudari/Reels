@@ -16,20 +16,25 @@ import {
 } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { AnimatePresence, motion } from "framer-motion";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 
 type FormData = {
   videoTitle: string;
   videoDescription: string;
-  thumbnail: File | null;
+  thumbnail: File | Blob | null;
+  thumb1: File | Blob | null;
+  thumb2: File | Blob | null;
   visibility: string;
+
 };
 
 const INITAL_DATA: FormData = {
   videoTitle: "",
   videoDescription: "",
   thumbnail: null,
+  thumb1: null,
+  thumb2: null,
   visibility: "public",
 };
 interface PublishWizardProps {
@@ -50,12 +55,13 @@ const Page: React.FC<PublishWizardProps> = ({
 }) => {
   const [data, setData] = useState(INITAL_DATA);
   let [step, setStep] = useState(1);
+  const[frameZUrl, setFrameZUrl] = useState('');
   const [videoUrl, setVideoUrl] = useState(() => {
     if (!video) return "";
     return URL.createObjectURL(video);
   });
   const [loading, setLoading] = useState(false);
-
+  const videoRef = useRef<HTMLVideoElement | null>(null);
   function updateFields(fields: Partial<FormData>) {
     setData((prev) => {
       return { ...prev, ...fields };
@@ -76,8 +82,11 @@ const Page: React.FC<PublishWizardProps> = ({
       updateFields={updateFields}
       videoUrl={videoUrl}
       uploading={uploading}
+      videoRef={videoRef}
+      setFrmaeZUrl={setFrameZUrl}
     />,
-    <VideoThumbnailForm {...data} updateFields={updateFields} />,
+    <VideoThumbnailForm {...data} updateFields={updateFields} 
+    videoRef={videoRef} frameZUrl={frameZUrl} videoUrl={videoUrl}/>,
     <VideoVisibiityForm {...data} updateFileds={updateFields} />,
   ]);
 

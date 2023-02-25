@@ -26,7 +26,7 @@ export default function Home() {
   const observer = useRef<IntersectionObserver | null>(null);
   const lastPostref = useRef<HTMLDivElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
-
+  const interactionObserver = useRef<IntersectionObserver | null>(null);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -86,9 +86,11 @@ export default function Home() {
 
     observer.current = new IntersectionObserver(
       (entries) => {
+        console.log("entries",entries);
+        
         const firstEntry = entries[0];
         if (firstEntry.isIntersecting && lastVisible) {
-          handleLoadMore();
+          // handleLoadMore();
           console.log("HandleLoad More called");
         }
       },
@@ -97,7 +99,6 @@ export default function Home() {
         root: rootRef.current,
       }
     );
-
     if (lastPostref.current) observer.current.observe(lastPostref.current);
   }, [lastVisible, newPostsLoading]);
 
@@ -105,7 +106,7 @@ export default function Home() {
   return (
     <>
       {loading ? (
-        <Loader count={4} />
+        <Loader count={4} className={"animate-pulse bg-slate-50 border relative border-gray-100 shadow rounded-3xl mt-[5vh] w-full mx-auto mb-6 max-w-[350px] min-h-[80vh]"} />
       ) : currentUser ? (
         <div
           ref={rootRef}
@@ -118,7 +119,13 @@ export default function Home() {
               ref={posts.length === index + 1 ? lastPostref : null}
               className=" snap-always snap-center mx-auto rounded-lg w-full h-[80vh] my-[8vh]"
             >
-              <VideoElement   post={post} isActive={post.id == activeTab} setActiveTab={setActiveTab} rootref={rootRef}/>
+              <VideoElement
+                post={post}
+                isActive={post.id == activeTab}
+                setActiveTab={setActiveTab}
+                rootref={rootRef}
+                observer = {observer}
+              />
             </div>
           ))}
         </div>
