@@ -11,9 +11,17 @@ import {
   SpeakerWaveIcon,
   SpeakerXMarkIcon,
 } from "@heroicons/react/24/solid";
+import { error } from "console";
 import { User } from "firebase/auth";
-import { arrayRemove, arrayUnion, doc, DocumentData, updateDoc } from "firebase/firestore";
+import {
+  arrayRemove,
+  arrayUnion,
+  doc,
+  DocumentData,
+  updateDoc,
+} from "firebase/firestore";
 import Image from "next/image";
+import { saveAs } from "file-saver";
 import React, {
   Dispatch,
   MutableRefObject,
@@ -31,7 +39,7 @@ interface VideoElementProps {
   isActive: boolean;
   setActiveTab: Dispatch<SetStateAction<string>>;
   observer: MutableRefObject<IntersectionObserver | null>;
-  user: User
+  user: User;
 }
 
 const VideoElement: React.FC<VideoElementProps> = ({
@@ -40,7 +48,7 @@ const VideoElement: React.FC<VideoElementProps> = ({
   isActive,
   setActiveTab,
   observer: rootObserver,
-  user
+  user,
 }) => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const {
@@ -51,10 +59,10 @@ const VideoElement: React.FC<VideoElementProps> = ({
     handleOnTimeUpdate,
     progress,
   } = useVideoPlayer({ videoElement: videoRef });
-  const [liked, setLiked] = useState<boolean>(()=>{
-    if(post.likes.includes(user.uid))return true;
+  const [liked, setLiked] = useState<boolean>(() => {
+    if (post.likes.includes(user.uid)) return true;
     return false;
-  })
+  });
   const playVideo = () => {
     console.log("PlayVideo called--", post.id);
     if (videoRef.current) {
@@ -70,7 +78,7 @@ const VideoElement: React.FC<VideoElementProps> = ({
       videoRef.current.muted = true;
     }
   };
-  
+
   const reference = useRef<HTMLDivElement>(null);
   const observer = useRef<IntersectionObserver | null>(null);
 
@@ -111,41 +119,53 @@ const VideoElement: React.FC<VideoElementProps> = ({
   };
 
   const handleLike = async () => {
-    if(!isActive) return;
+    if (!isActive) return;
     console.log("handleLike called", post.id);
     //animate
-    if(!liked){
+    if (!liked) {
       try {
-        const postId = post.id
-        const postRef = doc(db,'posts',postId);
+        const postId = post.id;
+        const postRef = doc(db, "posts", postId);
         await updateDoc(postRef, {
-          likes: arrayUnion(user.uid)
+          likes: arrayUnion(user.uid),
         });
-      setLiked(true);
+        setLiked(true);
       } catch (error) {
-        console.log("like Error",error);
+        console.log("like Error", error);
         toast.error("whoops! something went wrong");
       }
     }
-  }
+  };
   const handleDislike = async () => {
-    if(!isActive) return;
-    console.log("handleLike called", post.id);
+    if (!isActive) return;
+    console.log("handleDislike called", post.id);
     //animate
-    if(liked){
+    if (liked) {
       try {
-        const postId = post.id
-        const postRef = doc(db,'posts',postId);
+        const postId = post.id;
+        const postRef = doc(db, "posts", postId);
         await updateDoc(postRef, {
-          likes: arrayRemove(user.uid)
+          likes: arrayRemove(user.uid),
         });
-      setLiked(false);
+        setLiked(false);
       } catch (error) {
-        console.log("like Error",error);
+        console.log("like Error", error);
         toast.error("whoops! something went wrong");
       }
     }
-  }
+  };
+  const handleDownload = async () => {
+    if (!isActive) return;
+    console.log("handleDownload called", post.id);
+    // This can be downloaded directly:
+    const xhr = new XMLHttpRequest();
+    xhr.responseType = 'blob';
+    xhr.onload = (event) => {
+      const blob = xhr.response;
+    };
+    xhr.open('GET', post.postVideoUrl);
+    xhr.send();
+  };
   return (
     <div ref={reference} className="h-full flex justify-center space-x-1">
       <div
@@ -191,7 +211,7 @@ const VideoElement: React.FC<VideoElementProps> = ({
               {post.postTitle}
             </p>
             <div className="flex justify-between px-4 py-2">
-              <div className="inline-flex items-center">
+              <div className="flex items-center">
                 <div className="relative w-10 h-10 p-1 rounded-full ">
                   <Image
                     fill
@@ -202,27 +222,41 @@ const VideoElement: React.FC<VideoElementProps> = ({
                 </div>
                 <p className="text-gray-100">@{post.username}</p>
               </div>
-              <button
+              <div className="flex items-center">
+                <button
                 type="button"
-                className="px-2 rounded-md font-semibold text-gray-900 bg-gray-300"
+                className="px-2 py-1 rounded-md font-semibold text-gray-100 bg-red-500"
               >
-                subscribe
+                Feed➕
               </button>
+              </div>
+              
             </div>
             <div className="w-full bg-gray-200 rounded-full h-1 dark:bg-gray-700">
               <div
                 className="bg-red-600 h-1 rounded-full dark:bg-red-500"
-                style={{width: progress}}
+                style={{ width: progress }}
               ></div>
             </div>
           </div>
         </div>
       </div>
       <div className="flex flex-col justify-end p-3 space-y-8 rounded-md ">
-        <HandThumbUpIcon onClick={handleLike} className={`videoplayer_element ${liked && 'text-[#FF0084]'}`}   />
-        <HandThumbDownIcon onClick={handleDislike} className={`videoplayer_element ${!liked && 'text-white bg-gray-500'}`} />
+        <HandThumbUpIcon
+          onClick={handleLike}
+          className={`videoplayer_element ${liked && "text-[#FF0084]"}`}
+        />
+        <HandThumbDownIcon
+          onClick={handleDislike}
+          className={`videoplayer_element ${
+            !liked && "text-white bg-gray-500"
+          }`}
+        />
         <ChatBubbleBottomCenterTextIcon className=" videoplayer_element" />
-        <ArrowDownTrayIcon className="  videoplayer_element" />
+        <ArrowDownTrayIcon
+          // onClick={handleDownload}
+          className="  videoplayer_element cursor-not-allowed"
+        />
         <EllipsisHorizontalCircleIcon className="videoplayer_element " />
         {isMuted ? (
           <SpeakerXMarkIcon
