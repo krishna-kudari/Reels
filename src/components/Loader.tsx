@@ -8,7 +8,7 @@ interface LoaderProps {
 const Loader: React.FC<LoaderProps> = ({ count, className}) => {
   const [arr, setArr] = useState(new Array(count).fill(1));
   return (
-    <>
+    <div className=" pt-12 min-h-screen space-y-12 bg-gradient-to-br from-white to-slate-100 dark:from-gray-800 dark:to-slate-700">
       {arr.map((_:number,index:number) => (
         <div key={index} className={className}>
           <div className="animate-pulse flex px-4 space-x-4 w-full absolute bottom-4">
@@ -20,7 +20,7 @@ const Loader: React.FC<LoaderProps> = ({ count, className}) => {
           </div>
         </div>
       ))}
-    </>
+    </div>
   );
 };
 

@@ -20,6 +20,11 @@ module.exports = {
           },
         },
       },
+      colors: {
+        systemgray : {
+          
+        }
+      }
     },
   },
   plugins: [],

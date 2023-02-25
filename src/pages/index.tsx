@@ -106,12 +106,12 @@ export default function Home() {
   return (
     <>
       {loading ? (
-        <Loader count={4} className={"animate-pulse bg-slate-50 border relative border-gray-100 shadow rounded-3xl mt-[5vh] w-full mx-auto mb-6 max-w-[350px] min-h-[80vh]"} />
+        <Loader count={4} className={"animate-pulse bg-slate-50 bg-gradient-to-br dark:from-gray-500 dark:to-gray-700 border relative border-gray-100 shadow rounded-3xl  w-full mx-auto  max-w-[350px] min-h-[80vh]"} />
       ) : currentUser ? (
         <div
           ref={rootRef}
           id="snap_container"
-          className="snap snap-y snap-mandatory max-h-screen h-screen overflow-y-scroll"
+          className="snap snap-y snap-mandatory max-h-screen h-screen overflow-y-scroll bg-gradient-to-br from-white to-slate-100  dark:from-slate-700 dark:to-gray-900"
         >
           {posts.map((post, index) => (
             <div

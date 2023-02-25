@@ -6,6 +6,7 @@ import {
   EllipsisHorizontalCircleIcon,
   HandThumbDownIcon,
   HandThumbUpIcon,
+  HeartIcon,
   PauseIcon,
   PlayIcon,
   SpeakerWaveIcon,
@@ -170,7 +171,7 @@ const VideoElement: React.FC<VideoElementProps> = ({
     <div ref={reference} className="h-full flex justify-center space-x-1">
       <div
         onClick={handleClick}
-        className="video-wrapper relative flex justify-center items-center overflow-hidden h-full w-[335px] border dark:bg-gray-600 bg-slate-50 rounded-xl bg-center bg-cover bg-no-repeat"
+        className="video-wrapper relative flex justify-center items-center overflow-hidden h-full w-[335px]  dark:bg-gray-600 bg-slate-50 rounded-xl bg-center bg-cover bg-no-repeat"
         style={{ backgroundImage: `url(${post.postThumbnailUrl})` }}
       >
         {isActive ? (
@@ -207,12 +208,12 @@ const VideoElement: React.FC<VideoElementProps> = ({
             />
           )}
           <div className="absolute flex flex-col bottom-0 w-full ">
-            <p className="text-lg font-semibold text-gray-100 px-4 py-2 truncate">
+            <p className="text-base font-normal text-gray-100 px-4 py-1 truncate">
               {post.postTitle}
             </p>
-            <div className="flex justify-between px-4 py-2">
+            <div className="flex justify-between px-4 pb-2">
               <div className="flex items-center">
-                <div className="relative w-10 h-10 p-1 rounded-full ">
+                <div className="relative w-9 h-9 rounded-full ">
                   <Image
                     fill
                     src={post.user_profile_pic_url}
@@ -220,14 +221,14 @@ const VideoElement: React.FC<VideoElementProps> = ({
                     alt={"😍"}
                   />
                 </div>
-                <p className="text-gray-100">@{post.username}</p>
+                <p className="text-gray-100 text-sm">@{post.username}</p>
               </div>
               <div className="flex items-center">
                 <button
                 type="button"
                 className="px-2 py-1 rounded-md font-semibold text-gray-100 bg-red-500"
               >
-                Feed➕
+                ➕Feed
               </button>
               </div>
               
@@ -242,9 +243,9 @@ const VideoElement: React.FC<VideoElementProps> = ({
         </div>
       </div>
       <div className="flex flex-col justify-end p-3 space-y-8 rounded-md ">
-        <HandThumbUpIcon
+        <HeartIcon
           onClick={handleLike}
-          className={`videoplayer_element ${liked && "text-[#FF0084]"}`}
+          className={`videoplayer_element ${liked && "text-[#FF0084] dark:text-[#FF0084]"}`}
         />
         <HandThumbDownIcon
           onClick={handleDislike}
@@ -252,6 +253,7 @@ const VideoElement: React.FC<VideoElementProps> = ({
             !liked && "text-white bg-gray-500"
           }`}
         />
+        
         <ChatBubbleBottomCenterTextIcon className=" videoplayer_element" />
         <ArrowDownTrayIcon
           // onClick={handleDownload}

@@ -7,7 +7,7 @@
     @apply w-full p-2 border outline-none rounded-md slate;
   }
   .videoplayer_element {
-    @apply h-12 w-12 p-3 rounded-full bg-gray-200  cursor-pointer
+    @apply h-12 w-12 p-3 rounded-full bg-gray-200 dark:text-white dark:bg-black cursor-pointer dark:bg-opacity-20 backdrop-blur
   }
 }
 /* @layer utilities {
@@ -66,9 +66,11 @@ body::-webkit-scrollbar {
 html.dark {
   --white: #334155;
   --slate-200: #64748B;
+  
 }
 
 html {
+  
   margin: 0;
   padding: 0;
   box-sizing: border-box;
