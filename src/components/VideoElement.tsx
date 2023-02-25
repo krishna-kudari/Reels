@@ -1,5 +1,15 @@
 import useVideoPlayer from "@/hooks/useVideoPlayerDev";
-import { ArrowDownTrayIcon, ChatBubbleBottomCenterTextIcon, EllipsisHorizontalCircleIcon, HandThumbDownIcon, HandThumbUpIcon, PauseIcon, PlayIcon, SpeakerWaveIcon, SpeakerXMarkIcon } from "@heroicons/react/24/solid";
+import {
+  ArrowDownTrayIcon,
+  ChatBubbleBottomCenterTextIcon,
+  EllipsisHorizontalCircleIcon,
+  HandThumbDownIcon,
+  HandThumbUpIcon,
+  PauseIcon,
+  PlayIcon,
+  SpeakerWaveIcon,
+  SpeakerXMarkIcon,
+} from "@heroicons/react/24/solid";
 import { DocumentData } from "firebase/firestore";
 import Image from "next/image";
 import React, {
@@ -121,17 +131,45 @@ const VideoElement: React.FC<VideoElementProps> = ({
           />
         )}
         <div className="opacity-0 hover:opacity-100 absolute z-20 bg-gradient-to-t bg-opacity-5 from-gray-900 via-transparent to-black w-full h-full">
-          {!isPlaying ? <PlayIcon className=" absolute top-2 left-2 w-8 h-8 text-white" onClick={togglePlay} /> : <PauseIcon className="w-8 h-8 absolute top-2 left-2 text-white" onClick={togglePlay} />}
+          {!isPlaying ? (
+            <PlayIcon
+              className=" absolute top-2 left-2 w-8 h-8 text-white"
+              onClick={togglePlay}
+            />
+          ) : (
+            <PauseIcon
+              className="w-8 h-8 absolute top-2 left-2 text-white"
+              onClick={togglePlay}
+            />
+          )}
           <div className="absolute flex flex-col bottom-0 w-full ">
-            <p className="text-lg font-semibold text-gray-100 px-4 py-2 truncate">{post.postTitle}</p>
+            <p className="text-lg font-semibold text-gray-100 px-4 py-2 truncate">
+              {post.postTitle}
+            </p>
             <div className="flex justify-between px-4 py-2">
               <div className="inline-flex items-center">
                 <div className="relative w-10 h-10 p-1 rounded-full ">
-                  <Image fill src={post.user_profile_pic_url} className="object-cover object-center" alt={"😍"} />
+                  <Image
+                    fill
+                    src={post.user_profile_pic_url}
+                    className="object-cover object-center"
+                    alt={"😍"}
+                  />
                 </div>
                 <p className="text-gray-100">@{post.username}</p>
               </div>
-              <button type="button" className="px-2 rounded-md font-semibold text-gray-900 bg-gray-300">subscribe</button>
+              <button
+                type="button"
+                className="px-2 rounded-md font-semibold text-gray-900 bg-gray-300"
+              >
+                subscribe
+              </button>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-1 dark:bg-gray-700">
+              <div
+                className="bg-red-600 h-1 rounded-full dark:bg-red-500"
+                style={{width: progress}}
+              ></div>
             </div>
           </div>
         </div>
@@ -141,13 +179,18 @@ const VideoElement: React.FC<VideoElementProps> = ({
         <HandThumbDownIcon className="videoplayer_element " />
         <ChatBubbleBottomCenterTextIcon className=" videoplayer_element" />
         <ArrowDownTrayIcon className="  videoplayer_element" />
-        <EllipsisHorizontalCircleIcon className="videoplayer_element "/>
+        <EllipsisHorizontalCircleIcon className="videoplayer_element " />
         {isMuted ? (
-          <SpeakerXMarkIcon className=" videoplayer_element" onClick={toggleMute} />
+          <SpeakerXMarkIcon
+            className=" videoplayer_element"
+            onClick={toggleMute}
+          />
         ) : (
-          <SpeakerWaveIcon className=" videoplayer_element" onClick={toggleMute} />
+          <SpeakerWaveIcon
+            className=" videoplayer_element"
+            onClick={toggleMute}
+          />
         )}
-
       </div>
     </div>
   );

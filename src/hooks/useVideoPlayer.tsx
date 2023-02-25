@@ -20,7 +20,7 @@ const useVideoPlayer = (props: VideoPlayerProps) => {
   const [videoState, setVideoState] = useState<VideoPlayerState>({
     duration: 0,
     currentTime: 0,
-    isPlaying: false,
+    isPlaying: true,
     isEnded: false,
   });
 

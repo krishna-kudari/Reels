@@ -5,7 +5,7 @@ type useVideoPlayerProps = {
 };
 
 const useVideoPlayer = ({ videoElement }: useVideoPlayerProps) => {
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(true);
   const [progress, setProgress] = useState(0);
   const [speed, setSpeed] = useState(1);
   const [isMuted, setIsMuted] = useState(false);
