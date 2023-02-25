@@ -198,13 +198,13 @@ const VideoElement: React.FC<VideoElementProps> = ({
         <div className="opacity-0 hover:opacity-100 absolute z-20 bg-gradient-to-t bg-opacity-5 from-gray-900 via-transparent to-transparent w-full h-full">
           {!isPlaying ? (
             <PlayIcon
-              className=" absolute top-2 left-2 w-8 h-8 text-white"
-              onClick={togglePlay}
+              className=" absolute top-2 left-2 w-6 h-6 text-white cursor-pointer"
+              // onClick={togglePlay}
             />
           ) : (
             <PauseIcon
-              className="w-8 h-8 absolute top-2 left-2 text-white"
-              onClick={togglePlay}
+              className="w-6 h-6 absolute top-2 left-2 text-white cursor-pointer"
+              // onClick={togglePlay}
             />
           )}
           <div className="sm:hidden  absolute right-0 top-1/2 transform-cpu -translate-y-1/2 flex flex-col justify-end p-3 space-y-8 rounded-md ">
@@ -262,7 +262,7 @@ const VideoElement: React.FC<VideoElementProps> = ({
             <div className="w-full bg-gray-200 rounded-full h-1 dark:bg-gray-700">
               <div
                 className="bg-red-600 h-1 rounded-full dark:bg-red-500"
-                style={{ width: progress }}
+                style={{ width: `${progress}%` }}
               ></div>
             </div>
           </div>
