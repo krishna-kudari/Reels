@@ -1,4 +1,3 @@
-import Header from "@/components/header";
 import Image from "next/image";
 import Loader from "@/components/Loader";
 import ThemeButton from "@/components/ThemeButton";
@@ -15,10 +14,10 @@ import {
   query,
   startAfter,
 } from "firebase/firestore";
-import Head from "next/head";
 import { useRouter } from "next/router";
 import { reels_mark_solid, google_mark_colored } from "public/assets";
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 
 export default function Home() {
   const { loading, currentUser } = useAuth();
@@ -110,9 +109,9 @@ export default function Home() {
   console.log("Home", loading, currentUser);
   return (
     <>
-      <div className="absolute top-0 w-screen bg-gray-100 bg-opacity-5 backdrop-blur-sm border-1 flex justify-between">
+      <div className="absolute top-0 w-screen  bg-transparent border-1 flex justify-between z-30">
       <div
-        className={`w-[calc(50%-230px)] rounded-br-3xl shadow-sm p-2 px-4 space-x-2 justify-between bg-gray-200 bg-opacity-20 backdrop-blur-sm flex items-center`}
+        className={` max-w-sm w-1/2 md:w-[calc(50%-230px)] rounded-br-3xl shadow-sm p-2 px-4 space-x-2 justify-between bg-gray-200 bg-opacity-20 backdrop-blur-sm flex items-center`}
       >
         <div className="flex space-x-1  ">
           <div className="relative  h-8 w-8 ">
@@ -123,16 +122,19 @@ export default function Home() {
               alt={"🎬🎞️"}
             />
           </div>
-          <p className="font-bold text-xl text-slate-900 ">reels</p>
+          <p className="hidden sm:block font-bold text-xl text-slate-900 ">reels</p>
         </div>
-        <HomeIcon className="h-8 w-8  text-gray-900" />
+        <Link href={'/'}>
+        <HomeIcon className="h-7 w-7 dark:text-slate-50  text-gray-900 hover:scale-90 transition-all duration-300 ease-in-out" />
+        </Link>
       </div>
 
       <div
-        className={`w-[calc(50%-220px)] rounded-bl-3xl shadow-sm  p-2 px-4 space-x-2 justify-between bg-slate-800 bg-opacity-20 backdrop-blur-sm flex items-center`}
+        className={`max-w-sm w-1/2 md:w-[calc(50%-220px)] rounded-bl-3xl shadow-sm  p-2 px-4 space-x-3 justify-between bg-slate-800 bg-opacity-20 backdrop-blur-sm flex items-center`}
       > 
       <div className="flex space-x-4 items-center ">
         <ThemeButton />
+        <Link href={'/upload'}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -147,10 +149,12 @@ export default function Home() {
             d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
           />
         </svg>
+        </Link>
+        
       </div>
 
         <div className="flex space-x-1 items-center p-1 px-2 cursor-pointer rounded-xl hover:scale-105 transition-all duration-300 ease-in-out bg-white">
-          <p className="font-semibold text-base ">IAmKRS</p>
+          <p className="hidden lg:block font-semibold text-base ">IAmKRS</p>
           <div className="relative  h-8 w-8 rounded-lg ">
             <Image
               src={google_mark_colored}
