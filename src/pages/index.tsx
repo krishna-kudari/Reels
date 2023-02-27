@@ -174,7 +174,7 @@ export default function Home() {
               <span className="sr-only">Loading...</span>
             </div>
           ) : currentUser ? (
-            <Link href={`/${currentUser.username}-${currentUser.uid}`}>
+            <Link href={`/${currentUser.username}?profileId=${currentUser.uid}`}>
               <div className="flex space-x-1 items-center p-1 px-2 cursor-pointer rounded-xl hover:scale-105 transition-all duration-300 ease-in-out bg-white">
                 <p className="hidden lg:block font-semibold text-base ">
                   IAmKRS
