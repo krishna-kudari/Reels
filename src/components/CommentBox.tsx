@@ -112,7 +112,7 @@ const comment: React.FC<commentProps> = ({ post, currentUser }) => {
       <div id="comment_box" className="overflow-y-auto">
 
       {comments?.map((comment: DocumentData, index: number) => (
-        <div className="">
+        <div key={comment._id} className="">
         <div className="bg-white dark:bg-gray-800 text-black dark:text-gray-200 p-4 antialiased flex w-full max-w-lg">
           <img
             alt="❤️"
@@ -140,8 +140,8 @@ const comment: React.FC<commentProps> = ({ post, currentUser }) => {
               >
                 <defs>
                   <linearGradient id="a1" x1="50%" x2="50%" y1="0%" y2="100%">
-                    <stop offset="0%" stop-color="#18AFFF" />
-                    <stop offset="100%" stop-color="#0062DF" />
+                    <stop offset="0%" stopColor="#18AFFF" />
+                    <stop offset="100%" stopColor="#0062DF" />
                   </linearGradient>
                   <filter
                     id="c1"
@@ -196,8 +196,8 @@ const comment: React.FC<commentProps> = ({ post, currentUser }) => {
               >
                 <defs>
                   <linearGradient id="a2" x1="50%" x2="50%" y1="0%" y2="100%">
-                    <stop offset="0%" stop-color="#FF6680" />
-                    <stop offset="100%" stop-color="#E61739" />
+                    <stop offset="0%" stopColor="#FF6680" />
+                    <stop offset="100%" stopColor="#E61739" />
                   </linearGradient>
                   <filter
                     id="c2"

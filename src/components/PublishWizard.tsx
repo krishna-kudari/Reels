@@ -120,7 +120,7 @@ const Page: React.FC<PublishWizardProps> = ({
             username: user.username,
             user_profile_pic_url: user.profile_picture_url,
             likes: [],
-            comments: [],
+            commentsCount: 0,
             visibility: data.visibility,
           };
           await setDoc(doc(db, "posts", postId), postDoc);

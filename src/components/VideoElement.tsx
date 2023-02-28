@@ -33,6 +33,7 @@ import React, {
   useState,
 } from "react";
 import toast from "react-hot-toast";
+import CommentBox from "./CommentBox";
 
 interface VideoElementProps {
   post: DocumentData & { id: string };
@@ -64,6 +65,8 @@ const VideoElement: React.FC<VideoElementProps> = ({
     if (post.likes.includes(user.uid)) return true;
     return false;
   });
+  const [commentBoxOpen, setCommentBoxOpen] = useState(false);
+
   const playVideo = () => {
     console.log("PlayVideo called--", post.id);
     if (videoRef.current) {
@@ -99,6 +102,8 @@ const VideoElement: React.FC<VideoElementProps> = ({
           console.log("post intersecting", post);
           setActiveTab(post.id);
           playVideo();
+        }else{
+          setCommentBoxOpen(false);
         }
       },
       {
@@ -109,6 +114,7 @@ const VideoElement: React.FC<VideoElementProps> = ({
 
     if (reference.current) ob.observe(reference.current);
     return () => {
+      setCommentBoxOpen(false);
       cleanOb();
     };
   }, [reference]);
@@ -219,7 +225,8 @@ const VideoElement: React.FC<VideoElementProps> = ({
           }`}
         />
         
-        <ChatBubbleBottomCenterTextIcon className=" videoplayer_element_onscreen" />
+        <ChatBubbleBottomCenterTextIcon onClick={()=>{setCommentBoxOpen(!commentBoxOpen);console.log("commentSVGClick");
+        }} className=" videoplayer_element_onscreen" />
         <EllipsisHorizontalCircleIcon className="videoplayer_element_onscreen " />
         {isMuted ? (
           <SpeakerXMarkIcon
@@ -280,12 +287,12 @@ const VideoElement: React.FC<VideoElementProps> = ({
           }`}
         />
         
-        <ChatBubbleBottomCenterTextIcon className=" videoplayer_element" />
+        <ChatBubbleBottomCenterTextIcon onClick={()=>setCommentBoxOpen(!commentBoxOpen)} className=" videoplayer_element" />
         <ArrowDownTrayIcon
           // onClick={handleDownload}
           className="  videoplayer_element cursor-not-allowed"
         />
-        <EllipsisHorizontalCircleIcon className="videoplayer_element " />
+        <EllipsisHorizontalCircleIcon  className="videoplayer_element " />
         {isMuted ? (
           <SpeakerXMarkIcon
             className=" videoplayer_element"
@@ -298,6 +305,7 @@ const VideoElement: React.FC<VideoElementProps> = ({
           />
         )}
       </div>
+      {commentBoxOpen && <CommentBox post={post} currentUser={user} />}
     </div>
   );
 };
