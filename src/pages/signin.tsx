@@ -165,7 +165,7 @@ const Signin: React.FC<signinProps> = ({}) => {
           <div className="w-full bg-white flex flex-col justify-between ">
             <div className="flex-shrink-0  flex  w-full p-4 px-8 items-center space-x-3">
               <p className="w-full text-right text-xs font-medium text-gray-500 block">
-                Don't have an account?
+                Do not have an account?
               </p>
               <button
                 onClick={switchToSignUp}
