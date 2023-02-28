@@ -12,7 +12,7 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import toast from "react-hot-toast";
 interface uploadProps {}
 
-const upload: React.FC<uploadProps> = ({}) => {
+const Upload: React.FC<uploadProps> = ({}) => {
   const router = useRouter();
   const { loading, currentUser } = useAuth();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -220,4 +220,4 @@ const upload: React.FC<uploadProps> = ({}) => {
   );
 };
 
-export default upload;
+export default Upload;

@@ -23,7 +23,7 @@ interface commentProps {
   currentUser: any;
 }
 
-const comment: React.FC<commentProps> = ({ post, currentUser }) => {
+const Comment: React.FC<commentProps> = ({ post, currentUser }) => {
   const [commentText, setCommentText] = useState("");
   const [publishing, setPublishing] = useState(false);
   const [comments, setComments] = useState<DocumentData>([]);
@@ -255,4 +255,4 @@ const comment: React.FC<commentProps> = ({ post, currentUser }) => {
   );
 };
 
-export default comment;
+export default Comment;

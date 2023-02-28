@@ -20,7 +20,7 @@ interface LoginFormData {
   password: string;
 }
 
-const signin: React.FC<signinProps> = ({}) => {
+const Signin: React.FC<signinProps> = ({}) => {
   const router = useRouter();
   const [imageUrl ,setImageUrl] = useState<string|undefined>();
   const [show, setshow] = useState<boolean>(false);
@@ -537,4 +537,4 @@ const signin: React.FC<signinProps> = ({}) => {
   );
 };
 
-export default signin;
+export default Signin;

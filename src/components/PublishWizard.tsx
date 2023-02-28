@@ -79,6 +79,7 @@ const Page: React.FC<PublishWizardProps> = ({
     next,
   } = useMultistepForm([
     <VideoDetailsForm
+    key={0}
       {...data}
       updateFields={updateFields}
       videoUrl={videoUrl}
@@ -86,9 +87,9 @@ const Page: React.FC<PublishWizardProps> = ({
       videoRef={videoRef}
       setFrmaeZUrl={setFrameZUrl}
     />,
-    <VideoThumbnailForm {...data} updateFields={updateFields} 
+    <VideoThumbnailForm key={1} {...data} updateFields={updateFields} 
     videoRef={videoRef} frameZUrl={frameZUrl} videoUrl={videoUrl}/>,
-    <VideoVisibiityForm {...data} updateFileds={updateFields} />,
+    <VideoVisibiityForm key={2} {...data} updateFileds={updateFields} />,
   ]);
 
   async function onSubmit(e: FormEvent) {

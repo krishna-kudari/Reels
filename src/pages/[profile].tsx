@@ -31,9 +31,9 @@ import toast from "react-hot-toast";
 import CommentBox from "@/components/CommentBox";
 import ThemeButton from "@/components/ThemeButton";
 import Link from "next/link";
-interface profileProps {}
+interface ProfileProps {}
 
-const profile: React.FC<profileProps> = ({}) => {
+const Profile: React.FC<ProfileProps> = ({}) => {
   const router = useRouter();
   const [profileData, setProfileData] = useState<DocumentData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -436,4 +436,4 @@ const profile: React.FC<profileProps> = ({}) => {
   );
 };
 
-export default profile;
+export default Profile;

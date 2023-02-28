@@ -81,7 +81,7 @@ const VideoThumbnailForm: React.FC<
             href="https://support.google.com/youtube/answer/12340300"
             className="text-indigo-500 text-base font-bold "
             target="_blank"
-            rel="noopener"
+            rel="noopener noreferrer"
           >
             Know more
           </a>
