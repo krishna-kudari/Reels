@@ -1,6 +1,13 @@
 import Loader from "@/components/Loader";
 import { db } from "@/firebase/store";
-import { arrayRemove, arrayUnion, doc, DocumentData, getDoc, updateDoc } from "firebase/firestore";
+import {
+  arrayRemove,
+  arrayUnion,
+  doc,
+  DocumentData,
+  getDoc,
+  updateDoc,
+} from "firebase/firestore";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
@@ -21,6 +28,7 @@ import PostsList from "@/components/PostsList";
 import useVideoPlayer from "@/hooks/useVideoPlayerDev";
 import { ArrowDownTrayIcon } from "@heroicons/react/24/outline";
 import toast from "react-hot-toast";
+import CommentBox from "@/components/CommentBox";
 interface profileProps {}
 
 const profile: React.FC<profileProps> = ({}) => {
@@ -38,6 +46,7 @@ const profile: React.FC<profileProps> = ({}) => {
     if (selectedPost?.likes.includes(currentUser?.uid)) return true;
     return false;
   });
+  const [CommentBoxOpen, setCommentBoxOpen] = useState(false);
   const {
     isPlaying,
     isMuted,
@@ -97,7 +106,7 @@ const profile: React.FC<profileProps> = ({}) => {
     };
   }, [modalContentRef]);
   const handleLike = async () => {
-    if(!selectedPost || !currentUser)return;
+    if (!selectedPost || !currentUser) return;
     console.log("handleLike called", selectedPost?.id);
     //animate
     if (!liked) {
@@ -178,9 +187,7 @@ const profile: React.FC<profileProps> = ({}) => {
             posts={profileData?.posts}
           />
           {modalOpen && selectedPost && (
-            <div
-              className="fixed z-20 flex items-center justify-center bg-black inset-0 bg-opacity-40"
-            >
+            <div className="fixed z-20 flex items-center justify-center bg-black inset-0 bg-opacity-40">
               <div
                 ref={modalContentRef}
                 className="h-full max-h-[80vh] flex justify-center space-x-1"
@@ -221,14 +228,19 @@ const profile: React.FC<profileProps> = ({}) => {
                     <div className="sm:hidden  absolute right-0 top-1/2 transform-cpu -translate-y-1/2 flex flex-col justify-end p-3 space-y-8 rounded-md ">
                       <HeartIcon
                         onClick={handleLike}
-                        className={`videoplayer_element_onscreen ${liked && "text-[#FF0084] dark:text-[#FF0084]"}`}
+                        className={`videoplayer_element_onscreen ${
+                          liked && "text-[#FF0084] dark:text-[#FF0084]"
+                        }`}
                       />
                       <HandThumbDownIcon
                         onClick={handleDislike}
-                        className={`videoplayer_element_onscreen ${!liked && "text-gray-900 bg-white bg-opacity-25 backdrop-blur-md"}`}
+                        className={`videoplayer_element_onscreen ${
+                          !liked &&
+                          "text-gray-900 bg-white bg-opacity-25 backdrop-blur-md"
+                        }`}
                       />
 
-                      <ChatBubbleBottomCenterTextIcon className=" videoplayer_element_onscreen" />
+                      <ChatBubbleBottomCenterTextIcon onClick={()=>setCommentBoxOpen(!CommentBoxOpen)} className=" videoplayer_element_onscreen" />
                       <EllipsisHorizontalCircleIcon className="videoplayer_element_onscreen " />
                       {isMuted ? (
                         <SpeakerXMarkIcon
@@ -279,32 +291,49 @@ const profile: React.FC<profileProps> = ({}) => {
                   </div>
                 </div>
                 <div className="hidden sm:flex flex-col justify-end p-3 space-y-8 rounded-md ">
-                  <HeartIcon
-                    onClick={handleLike}
-                    className={`videoplayer_element ${liked &&"text-[#FF0084] dark:text-[#FF0084]"}`}
-                  />
-                  <HandThumbDownIcon
-                    onClick={handleDislike}
-                    className={`videoplayer_element ${!liked && "text-white bg-gray-500"}`}
-                  />
-                  <ChatBubbleBottomCenterTextIcon className=" videoplayer_element" />
-                  <ArrowDownTrayIcon
-                    // onClick={handleDownload}
-                    className="  videoplayer_element cursor-not-allowed"
-                  />
-                  <EllipsisHorizontalCircleIcon className="videoplayer_element " />
-                  {isMuted ? (
-                    <SpeakerXMarkIcon
-                      className=" videoplayer_element"
-                      onClick={toggleMute}
+                  <div>
+                    <HeartIcon
+                      onClick={handleLike}
+                      className={`videoplayer_element ${
+                        liked && "text-[#FF0084] dark:text-[#FF0084]"
+                      }`}
                     />
-                  ) : (
-                    <SpeakerWaveIcon
-                      className=" videoplayer_element"
-                      onClick={toggleMute}
+                  </div>
+                  <div className="">
+                    <HandThumbDownIcon
+                      onClick={handleDislike}
+                      className={`videoplayer_element ${
+                        !liked && "text-white bg-gray-500"
+                      }`}
                     />
-                  )}
+                  </div>
+                  <div onClick={()=>setCommentBoxOpen(!CommentBoxOpen)} className="">
+                    <ChatBubbleBottomCenterTextIcon className=" videoplayer_element" />
+                  </div>
+                  <div>
+                    <ArrowDownTrayIcon
+                      // onClick={handleDownload}
+                      className="  videoplayer_element cursor-not-allowed"
+                    />
+                  </div>
+                  <div>
+                    <EllipsisHorizontalCircleIcon className="videoplayer_element " />
+                  </div>
+                  <div>
+                    {isMuted ? (
+                      <SpeakerXMarkIcon
+                        className=" videoplayer_element"
+                        onClick={toggleMute}
+                      />
+                    ) : (
+                      <SpeakerWaveIcon
+                        className=" videoplayer_element"
+                        onClick={toggleMute}
+                      />
+                    )}
+                  </div>
                 </div>
+                {CommentBoxOpen && <CommentBox post={selectedPost} currentUser={currentUser}  />}
               </div>
             </div>
           )}

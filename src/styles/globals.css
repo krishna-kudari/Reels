@@ -58,6 +58,17 @@
   background: rgb(130, 130, 130);
   border-radius: 5px;
 }
+#comment_box::-webkit-scrollbar {
+  width: 4px;
+}
+
+#comment_box::-webkit-scrollbar-track {
+  background: #fff;
+}
+#comment_box::-webkit-scrollbar-thumb {
+  background: rgb(130, 130, 130);
+  border-radius: 5px;
+}
 
 #snap_container::-webkit-scrollbar {
   width: 0;
