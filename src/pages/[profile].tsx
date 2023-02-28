@@ -217,7 +217,7 @@ const profile: React.FC<profileProps> = ({}) => {
                 </p>
                 <div className="relative  h-8 w-8 rounded-lg ">
                   <Image
-                    src={google_mark_colored}
+                    src={currentUser.profile_picture_url}
                     fill
                     className="object-cover"
                     alt={"🎬🎞️"}
@@ -263,7 +263,7 @@ const profile: React.FC<profileProps> = ({}) => {
                 <p className="font-medium text-gray-400">Followers</p>
               </div>
               <div className="text-center">
-                <p className="font-bold ">350</p>
+                <p className="font-bold ">{profileData.posts.length}</p>
                 <p className="font-medium text-gray-400">Posts</p>
               </div>
               <div className="text-center">

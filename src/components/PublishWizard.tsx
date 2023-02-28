@@ -13,6 +13,7 @@ import {
   serverTimestamp,
   setDoc,
   Timestamp,
+  updateDoc,
 } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { AnimatePresence, motion } from "framer-motion";
@@ -127,6 +128,10 @@ const Page: React.FC<PublishWizardProps> = ({
           toast.success("published", {
             id: notification,
           });
+          const userRef = doc(db,'users',user.uid);
+          await updateDoc(userRef,{
+            postsCount: user.postCount+1
+          })
           //animate
           setStep(steps.length+1);
           setAnimationCompleted(false);
