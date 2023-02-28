@@ -31,7 +31,7 @@ const Upload: React.FC<uploadProps> = ({}) => {
       onDrop: (acceptedFiles) => {
         if(acceptedFiles.length == 0)return;
         setSelectedFile(acceptedFiles[0]);
-        // uploadVideo(acceptedFiles[0]);
+        uploadVideo(acceptedFiles[0]);
         console.log(acceptedFiles);
         animate();
       },
