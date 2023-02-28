@@ -1,6 +1,6 @@
 import Loader from "@/components/Loader";
 import { db } from "@/firebase/store";
-import { doc, DocumentData, getDoc } from "firebase/firestore";
+import { arrayRemove, arrayUnion, doc, DocumentData, getDoc, updateDoc } from "firebase/firestore";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
@@ -20,6 +20,7 @@ import {
 import PostsList from "@/components/PostsList";
 import useVideoPlayer from "@/hooks/useVideoPlayerDev";
 import { ArrowDownTrayIcon } from "@heroicons/react/24/outline";
+import toast from "react-hot-toast";
 interface profileProps {}
 
 const profile: React.FC<profileProps> = ({}) => {
@@ -32,7 +33,11 @@ const profile: React.FC<profileProps> = ({}) => {
   >(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const modalContentRef = useRef<HTMLDivElement | null>(null);
-
+  const { currentUser } = useAuth();
+  const [liked, setLiked] = useState<boolean>(() => {
+    if (selectedPost?.likes.includes(currentUser?.uid)) return true;
+    return false;
+  });
   const {
     isPlaying,
     isMuted,
@@ -41,7 +46,6 @@ const profile: React.FC<profileProps> = ({}) => {
     handleOnTimeUpdate,
     progress,
   } = useVideoPlayer({ videoElement: videoRef });
-  const { currentUser } = useAuth();
   useEffect(() => {
     if (!router.isReady || !currentUser) return;
     setLoading(true);
@@ -67,18 +71,66 @@ const profile: React.FC<profileProps> = ({}) => {
     getProfileData();
   }, [router.isReady, currentUser]);
 
-  console.log(router.query.profileId);
+  // console.log(router.query.profileId);
 
   const onPostClick = (post: DocumentData & { id: string }) => {
     console.log("modal", post);
     setSelectedPost(post);
     setModalOpen(true);
   };
-  const handleModalClick = (event: React.SyntheticEvent) => {
-    // if (!modalContentRef?.current?.contains(event.currentTarget)) {
-    //   setModalOpen(false);
-    //   setSelectedPost(null);
-    // }
+
+  useEffect(() => {
+    function handleClickOutside(event: any) {
+      if (
+        modalContentRef.current &&
+        !modalContentRef.current.contains(event.target)
+      ) {
+        setModalOpen(false);
+        setSelectedPost(null);
+      }
+    }
+
+    window.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      window.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [modalContentRef]);
+  const handleLike = async () => {
+    if(!selectedPost || !currentUser)return;
+    console.log("handleLike called", selectedPost?.id);
+    //animate
+    if (!liked) {
+      try {
+        const postId = selectedPost?.id;
+        const postRef = doc(db, "posts", postId);
+        await updateDoc(postRef, {
+          likes: arrayUnion(currentUser.uid),
+        });
+        setLiked(true);
+      } catch (error) {
+        console.log("like Error", error);
+        toast.error("whoops! something went wrong");
+      }
+    }
+  };
+  const handleDislike = async () => {
+    if (!selectedPost || !currentUser) return;
+    console.log("handleDislike called", selectedPost.id);
+    //animate
+    if (liked) {
+      try {
+        const postId = selectedPost.id;
+        const postRef = doc(db, "posts", postId);
+        await updateDoc(postRef, {
+          likes: arrayRemove(currentUser.uid),
+        });
+        setLiked(false);
+      } catch (error) {
+        console.log("like Error", error);
+        toast.error("whoops! something went wrong");
+      }
+    }
   };
   return (
     <div className="bg-gray-100 px-2 min-h-screen">
@@ -127,12 +179,11 @@ const profile: React.FC<profileProps> = ({}) => {
           />
           {modalOpen && selectedPost && (
             <div
-              onClick={handleModalClick}
               className="fixed z-20 flex items-center justify-center bg-black inset-0 bg-opacity-40"
             >
               <div
                 ref={modalContentRef}
-                className="h-full border max-h-[80vh] flex justify-center space-x-1"
+                className="h-full max-h-[80vh] flex justify-center space-x-1"
               >
                 <div
                   onClick={togglePlay}
@@ -169,12 +220,12 @@ const profile: React.FC<profileProps> = ({}) => {
                     )}
                     <div className="sm:hidden  absolute right-0 top-1/2 transform-cpu -translate-y-1/2 flex flex-col justify-end p-3 space-y-8 rounded-md ">
                       <HeartIcon
-                        // onClick={handleLike}
-                        className={`videoplayer_element_onscreen ${"text-[#FF0084] dark:text-[#FF0084]"}`}
+                        onClick={handleLike}
+                        className={`videoplayer_element_onscreen ${liked && "text-[#FF0084] dark:text-[#FF0084]"}`}
                       />
                       <HandThumbDownIcon
-                        // onClick={handleDislike}
-                        className={`videoplayer_element_onscreen ${"text-gray-900 bg-white bg-opacity-25 backdrop-blur-md"}`}
+                        onClick={handleDislike}
+                        className={`videoplayer_element_onscreen ${!liked && "text-gray-900 bg-white bg-opacity-25 backdrop-blur-md"}`}
                       />
 
                       <ChatBubbleBottomCenterTextIcon className=" videoplayer_element_onscreen" />
@@ -218,9 +269,9 @@ const profile: React.FC<profileProps> = ({}) => {
                           </button>
                         </div>
                       </div>
-                      <div className="w-full bg-gray-200 rounded-full h-1 dark:bg-gray-700">
+                      <div className="w-full bg-gray-200 rounded-full h-0.5 dark:bg-gray-700">
                         <div
-                          className="bg-red-600 h-1 rounded-full dark:bg-red-500"
+                          className="bg-red-600 h-0.5 rounded-full dark:bg-red-500"
                           style={{ width: `${progress}%` }}
                         ></div>
                       </div>
@@ -229,14 +280,13 @@ const profile: React.FC<profileProps> = ({}) => {
                 </div>
                 <div className="hidden sm:flex flex-col justify-end p-3 space-y-8 rounded-md ">
                   <HeartIcon
-                    // onClick={handleLike}
-                    className={`videoplayer_element ${"text-[#FF0084] dark:text-[#FF0084]"}`}
+                    onClick={handleLike}
+                    className={`videoplayer_element ${liked &&"text-[#FF0084] dark:text-[#FF0084]"}`}
                   />
                   <HandThumbDownIcon
-                    // onClick={handleDislike}
-                    className={`videoplayer_element ${"text-white bg-gray-500"}`}
+                    onClick={handleDislike}
+                    className={`videoplayer_element ${!liked && "text-white bg-gray-500"}`}
                   />
-
                   <ChatBubbleBottomCenterTextIcon className=" videoplayer_element" />
                   <ArrowDownTrayIcon
                     // onClick={handleDownload}

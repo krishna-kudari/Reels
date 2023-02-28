@@ -50,7 +50,7 @@ const PostsList: React.FC<PostsListProps> = ({
           collection(db, "posts"),
           where("userId", "==", profileId),
           orderBy("createdAt", "desc"),
-          limit(12)
+          limit(2)
         );
         const querySnapshot = await getDocs(q);
         const newPosts: Array<DocumentData & { id: string }> = [];
@@ -79,7 +79,7 @@ const PostsList: React.FC<PostsListProps> = ({
         where("userId", "==", profileId),
         orderBy("createdAt", "desc"),
         startAfter(lastPostFetched),
-        limit(12)
+        limit(2)
       );
       const querySnapshot = await getDocs(q);
       const newPosts: Array<DocumentData & { id: string }> = [];
@@ -151,14 +151,14 @@ const PostsList: React.FC<PostsListProps> = ({
           <button
             type="button"
             onClick={handleLoadMore}
-            className="px-2 py-1 mx-auto flex items-center bg-gray-700 hover:scale-90 bg-opacity-50  duration-300 rounded-lg text-stone-100 text-lg font-medium"
+            className="px-2 py-1 mx-auto flex items-center bg-gray-700  bg-opacity-50 rounded-lg text-stone-100 text-lg font-medium"
           >
-            <span>Load more</span>
+            <span>{!moreLoading ?'Load more' : 'Loading'}{" "}</span>
             {moreLoading ? (
               <div role="status">
               <svg
                 aria-hidden="true"
-                className="w-8 h-8 mr-2 p-1 text-gray-600 animate-spin dark:text-gray-600 fill-gray-100"
+                className="w-6 h-6 ml-2  text-gray-600 animate-spin dark:text-gray-600 fill-gray-100"
                 viewBox="0 0 100 101"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
