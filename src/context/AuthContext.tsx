@@ -11,8 +11,10 @@ import {
 } from "firebase/auth";
 import { auth } from "@/firebase/auth";
 import { User, UserCredential } from "firebase/auth";
-import { doc, DocumentData, getDoc } from "firebase/firestore";
+import { doc, DocumentData, getDoc, setDoc } from "firebase/firestore";
 import { db } from "@/firebase/store";
+import toast from "react-hot-toast";
+import { useRouter } from "next/router";
 
 type userData = User & DocumentData;
 
@@ -45,6 +47,7 @@ export const useAuth = () => {
 export const AuthProvider: React.FC<ProviderProps> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<userData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const router = useRouter();
 
   const signIn = (email: string, password: string): Promise<UserCredential> => {
     return signInWithEmailAndPassword(auth, email, password);
@@ -68,7 +71,7 @@ export const AuthProvider: React.FC<ProviderProps> = ({ children }) => {
   //AuthProvider mwthods
   const signinWithGoogle = () => {
     signInWithPopup(auth, googleprovider)
-      .then((result) => {
+      .then(async(result) => {
         // This gives you a Google Access Token. You can use it to access the Google API.
         const credential = GoogleAuthProvider.credentialFromResult(result);
         if (!credential) throw new Error("No credential");
@@ -77,7 +80,19 @@ export const AuthProvider: React.FC<ProviderProps> = ({ children }) => {
         const user = result.user;
         // IdP data available using getAdditionalUserInfo(result)
         // ...
+        const {email , photoURL , uid , displayName} = user;
+        const userDoc = {
+          username : displayName,
+          email: email,
+          password: "",
+          profile_picture_url: photoURL,
+          userId : uid,
+          posts : []
+        }
+        await setDoc(doc(db, "users", uid), userDoc);
+        toast.success("account created");
         console.log(user);
+        router.replace("/");
       })
       .catch((error) => {
         // Handle Errors here.
@@ -93,7 +108,7 @@ export const AuthProvider: React.FC<ProviderProps> = ({ children }) => {
   };
   const signinWithGitHub = () => {
     signInWithPopup(auth, githubprovider)
-      .then((result) => {
+      .then(async(result) => {
         // This gives you a GitHub Access Token. You can use it to access the GitHub API.
         const credential = GithubAuthProvider.credentialFromResult(result);
         if (!credential) throw new Error("No credential");
@@ -103,6 +118,18 @@ export const AuthProvider: React.FC<ProviderProps> = ({ children }) => {
         const user = result.user;
         // IdP data available using getAdditionalUserInfo(result)
         // ...
+        const {email , photoURL , uid , displayName} = user;
+        const userDoc = {
+          username : displayName,
+          email: email,
+          password: "",
+          profile_picture_url: photoURL,
+          userId : uid,
+          posts : []
+        }
+        await setDoc(doc(db, "users", uid), userDoc);
+        toast.success("account created");
+        router.replace("/")
       })
       .catch((error: any) => {
         // Handle Errors here.

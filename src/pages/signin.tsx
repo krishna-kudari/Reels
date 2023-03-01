@@ -86,6 +86,7 @@ const Signin: React.FC<signinProps> = ({}) => {
             password: data.signup_password,
             profile_picture_url: downloadUrl,
             userId,
+            posts: [],
           }
           await setDoc(doc(db, "users", userId), userDoc);
           toast.success("account created");

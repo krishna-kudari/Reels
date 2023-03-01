@@ -8,6 +8,7 @@ import { uuidv4 } from "@firebase/util";
 import { ArrowRightIcon, PhotoIcon } from "@heroicons/react/24/solid";
 import { User } from "firebase/auth";
 import {
+  arrayUnion,
   doc,
   DocumentData,
   serverTimestamp,
@@ -131,7 +132,7 @@ const Page: React.FC<PublishWizardProps> = ({
           });
           const userRef = doc(db,'users',user.uid);
           await updateDoc(userRef,{
-            postsCount: user.postCount+1
+            posts: arrayUnion(postId),
           })
           //animate
           setStep(steps.length+1);

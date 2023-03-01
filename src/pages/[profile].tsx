@@ -213,13 +213,13 @@ const Profile: React.FC<ProfileProps> = ({}) => {
             <Link href={`/${currentUser.username}?profileId=${currentUser.uid}`}>
               <div className="flex space-x-1 items-center p-1 px-2 cursor-pointer rounded-xl hover:scale-105 transition-all duration-300 ease-in-out bg-white">
                 <p className="hidden lg:block font-semibold text-base ">
-                  IAmKRS
+                  {currentUser.username}
                 </p>
                 <div className="relative  h-8 w-8 rounded-lg ">
                   <Image
                     src={currentUser.profile_picture_url}
                     fill
-                    className="object-cover"
+                    className="object-cover rounded-full"
                     alt={"🎬🎞️"}
                   />
                 </div>
@@ -245,7 +245,7 @@ const Profile: React.FC<ProfileProps> = ({}) => {
                   <Image
                     src={profileData.profile_picture_url}
                     fill
-                    className="object-cover w-full h-full p-4"
+                    className="object-cover w-full h-full p-4 rounded-full"
                     alt={""}
                   />
                 </div>
