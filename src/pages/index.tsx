@@ -18,6 +18,7 @@ import { useRouter } from "next/router";
 import { reels_mark_solid, google_mark_colored } from "public/assets";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { PlusCircleIcon } from "@heroicons/react/24/outline";
 
 export default function Home() {
   const { loading, currentUser } = useAuth();
@@ -109,11 +110,11 @@ export default function Home() {
   console.log("Home", loading, currentUser);
   return (
     <>
-      <div className="absolute top-0 w-screen  bg-transparent border-1 flex justify-between z-30">
+      <div className="absolute top-0 w-screen  bg-white bg-opacity-25 backdrop-blur-sm border-1 flex justify-between z-30">
         <div
-          className={` max-w-sm w-1/2 md:w-[calc(50%-230px)] rounded-br-3xl shadow-sm p-2 px-4 space-x-2 justify-between bg-gray-200 bg-opacity-20 backdrop-blur-sm flex items-center`}
+          className={`w-1/2 p-2 px-4 space-x-2 justify-between flex items-center`}
         >
-          <div className="flex space-x-1  ">
+          <div className="flex space-x-1 ">
             <div className="relative  h-8 w-8 ">
               <Image
                 src={reels_mark_solid}
@@ -126,33 +127,38 @@ export default function Home() {
               reels
             </p>
           </div>
-          <Link href={"/"}>
-            <HomeIcon className="h-7 w-7 dark:text-slate-50  text-gray-900 hover:scale-90 transition-all duration-300 ease-in-out" />
-          </Link>
         </div>
 
         <div
-          className={`max-w-sm w-fit  rounded-bl-3xl shadow-sm  p-2 px-4 space-x-3 justify-between bg-slate-800 bg-opacity-20 backdrop-blur-sm flex items-center`}
+          className={`flex-1 min-w-max max-w-[35%] w-1/2  p-2 px-4 space-x-3 justify-between flex items-center`}
         >
-          <div className="flex space-x-4 items-center ">
-            <ThemeButton />
-            <Link href={"/upload"}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={3}
-                stroke="currentColor"
-                className="w-10 h-10 cursor-pointer rounded-full hover:scale-105 transition-all duration-300 ease-in-out  text-[rgb(50,215,75)] bg-slate-50 "
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
+          <div className="group relative inline-block">
+            <Link href={"/"}>
+              <HomeIcon className="h-7 w-7 dark:text-slate-50  text-gray-900 hover:scale-90 transition-all duration-300 ease-in-out" />
             </Link>
+            <div className="absolute top-full left-1/2 z-20 mt-3 -translate-x-1/2 whitespace-nowrap rounded bg-black py-[6px] px-4 text-sm font-semibold text-white opacity-0 group-hover:opacity-100">
+              <span className="absolute top-[-3px] left-1/2 -z-10 h-2 w-2 -translate-x-1/2 rotate-45 rounded-sm bg-black"></span>
+              Home
+            </div>
           </div>
+
+          <div className="group relative inline-block">
+            <ThemeButton />
+            <div className="absolute top-full left-1/2 z-20 mt-3 -translate-x-1/2 whitespace-nowrap rounded bg-black py-[6px] px-4 text-sm font-semibold text-white opacity-0 group-hover:opacity-100">
+              <span className="absolute top-[-3px] left-1/2 -z-10 h-2 w-2 -translate-x-1/2 rotate-45 rounded-sm bg-black"></span>
+              dark Mode
+            </div>
+          </div>
+          <div className="group relative inline-block">
+            <Link href={"/upload"}>
+              <PlusCircleIcon className="w-10 h-10 cursor-pointer text-stone-900 dark:text-gray-100 rounded-full hover:scale-105 " />
+            </Link>
+            <div className="absolute top-full left-1/2 z-20 mt-3 -translate-x-1/2 whitespace-nowrap rounded bg-black py-[6px] px-4 text-sm font-semibold text-white opacity-0 group-hover:opacity-100">
+              <span className="absolute top-[-3px] left-1/2 -z-10 h-2 w-2 -translate-x-1/2 rotate-45 rounded-sm bg-black"></span>
+              Home
+            </div>
+          </div>
+
           {loading ? (
             <div role="status">
               <svg
@@ -174,21 +180,29 @@ export default function Home() {
               <span className="sr-only">Loading...</span>
             </div>
           ) : currentUser ? (
-            <Link href={`/${currentUser.username}?profileId=${currentUser.uid}`}>
-              <div className="flex space-x-1 items-center p-1 px-2 cursor-pointer rounded-xl hover:scale-105 transition-all duration-300 ease-in-out bg-white">
-                <p className="hidden lg:block font-semibold text-base ">
-                  {currentUser.username}
-                </p>
-                <div className="relative  h-8 w-8 rounded-lg ">
-                  <Image
-                    src={currentUser.profile_picture_url}
-                    fill
-                    className="object-cover rounded-full"
-                    alt={"🎬🎞️"}
-                  />
+            <div className="group relative inline-block">
+              <Link
+                href={`/${currentUser.username}?profileId=${currentUser.uid}`}
+              >
+                <div className="flex space-x-1 items-center p-1 px-2 cursor-pointer rounded-xl hover:scale-105 transition-all duration-300 ease-in-out bg-white">
+                  <p className="hidden lg:block font-semibold text-base ">
+                    {currentUser.username}
+                  </p>
+                  <div className="relative  h-8 w-8 rounded-lg ">
+                    <Image
+                      src={currentUser.profile_picture_url}
+                      fill
+                      className="object-cover rounded-full"
+                      alt={"🎬🎞️"}
+                    />
+                  </div>
                 </div>
+              </Link>
+              <div className="absolute top-full left-1/2 z-20 mt-3 -translate-x-1/2 whitespace-nowrap rounded bg-black py-[6px] px-4 text-sm font-semibold text-white opacity-0 group-hover:opacity-100">
+                <span className="absolute top-[-3px] left-1/2 -z-10 h-2 w-2 -translate-x-1/2 rotate-45 rounded-sm bg-black"></span>
+                profile
               </div>
-            </Link>
+            </div>
           ) : (
             <Link href={"/signin"}>
               <div className="flex items-center p-1 px-2 cursor-pointer rounded-lg hover:scale-105 transition-all duration-300 ease-in-out bg-white">
