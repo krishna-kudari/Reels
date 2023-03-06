@@ -46,7 +46,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-![product-screenshot](./public/assets/product.png)
+![product-screenshot](./public/demo/feed.png)
 
 ### Built With
 
@@ -87,19 +87,23 @@ To run the application on your local machine, follow these steps:
 
 ### 🙋‍♀️ Signin with google  or github or with credentials and upload profile photo and create a username.
 
-![signin](./public/assets/auth.png)
+![signin](./public/demo/auth.png)
 
 ### 💬 you can start using the application by uploading a new reel or enjoying the feed.
 
-![create post](./public/assets/create-post.png)
+![create post](./public/demo/feed.png)
 
-![subreddit-page](./public/assets/subreddit.png)
-![post-page](./public/assets/post.png)
+![subreddit-page](./public/demo/upload.png)
 
 ### like and comment on reels.
 
-![like-comment](./public/assets/like-comment.png)
+![like-comment](./public/demo/likeComment.png)
 
+### dark theme support
+![dark-theme](./public/demo/brandbird.png)
+
+### profile section to track of you uploads
+![profile](./public/demo/profile.png)
 ### 📧 If you have any issues or questions about the application, please reach out to me at [email].
 
 🎉 Thank you for using our application! We hope you enjoy your experience.
