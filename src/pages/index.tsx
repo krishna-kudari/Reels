@@ -95,7 +95,7 @@ export default function Home() {
 
         const firstEntry = entries[0];
         if (firstEntry.isIntersecting && lastVisible) {
-          // handleLoadMore();
+          handleLoadMore();
           console.log("HandleLoad More called");
         }
       },
