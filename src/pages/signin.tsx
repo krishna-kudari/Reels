@@ -13,6 +13,7 @@ import { setDoc, doc } from "firebase/firestore";
 import { userInfo } from "os";
 import { db } from "@/firebase/store";
 import { Router, useRouter } from "next/router";
+import { NextPageContext } from "next";
 interface signinProps {}
 
 interface LoginFormData {
@@ -133,22 +134,22 @@ const Signin: React.FC<signinProps> = ({}) => {
 
   return (
     <div
-      className="h-screen overflow-hidden border flex items-center justify-center"
+      className="h-screen overflow-hidden flex items-center justify-center"
       style={{
-        background: "linear-gradient(135deg,white 0% 50%, #000 50% 100%)",
+        background: "linear-gradient(135deg,#333 0% 50%, #222 50% 100%)",
       }}
     >
-      <div className="flex bg-white rounded-3xl overflow-hidden shadow shadow-gray-700 min-w-[80vw]">
-        <div className=" hidden md:flex w-[45%] z-10 bg-gray-50 flex-col justify-between">
+      <div className="flex bg-systembgLight-200 dark:bg-systembgDark-200 rounded-3xl overflow-hidden shadow-sm shadow-systembgDark-100 min-w-[80vw]">
+        <div className=" hidden md:flex w-[45%] z-10 dark:bg-systembgDark-200 bg-gray-50 flex-col justify-between">
           <div className="flex space-x-1 p-4 px-8 items-center ">
             <div className="relative  h-5 w-5 ">
-              <Image src={reels_mark_solid} alt={"🎬🎞️"} />
+              <Image src={reels_mark_solid} alt={"🎬🎞️"} className="dark:text-systemTintLight-pink" />
             </div>
             <p className="font-bold text-xl text-slate-900 ">reels</p>
           </div>
           <div>{/* <Image src={""} alt={""} /> */}</div>
           <div className="flex items-center justify-center p-8 ">
-            <p className="text-xs truncate text-gray-400 font-medium">
+            <p className="text-xs truncate text-systemLbLight-100 dark:text-systemLbDark-200 font-medium">
               Used by millions of people around the world
             </p>
           </div>
@@ -160,29 +161,29 @@ const Signin: React.FC<signinProps> = ({}) => {
             animate={{x: 0, opacity: 1}}
             exit={{x:"-90vw" , zIndex:1 , opacity:0.8}}
             transition={{delay:-0.2,duration: 0.6}}
-            className="w-[100%] md:w-[55%]"
+            className="w-[100%] md:w-[55%] dark:bg-systembgDark-100 bg-systembgLight-100"
           >
 {authAction == "Login" ? (
-          <div className="w-full bg-white flex flex-col justify-between ">
+          <div className="w-full dark:bg-systembgDark-100 bg-white flex flex-col justify-between ">
             <div className="flex-shrink-0  flex  w-full p-4 px-8 items-center space-x-3">
-              <p className="w-full text-right text-xs font-medium text-gray-500 block">
+              <p className="w-full text-right text-xs font-medium dark:text-systemLbDark-200 text-systemLbLight-200  block">
                 Do not have an account?
               </p>
               <button
                 onClick={switchToSignUp}
                 type="button"
-                className="text-xs flex-shrink-0 block font-medium text-gray-700 border-2  rounded px-2 py-1"
+                className="text-xs flex-shrink-0 dark:hover:text-systemLbDark-400  block font-medium text-systemLbLight-300 dark:text-systemLbDark-300  border-2 border-systemSepDark-sep hover:border-systemSepDark-opaque  rounded px-2 py-1"
               >
                 Sign Up
               </button>
             </div>
             <div className="h-full  px-12 space-y-10">
               <div className="space-y-2 ">
-                <p className="font-semibold text-gray-500">LOGIN</p>
-                <p className="font-medium text-gray-700 text-3xl">
+                <p className="font-semibold text-systemLbLight-400 dark:text-systemLbDark-400">LOGIN</p>
+                <p className="font-medium text-systemLbLight-300 dark:text-systemLbDark-300 text-3xl">
                   Welcome Back
                 </p>
-                <p className="font-semibold text-gray-400 text-sm">
+                <p className="font-semibold text-systemLbLight-400 dark:text-systemLbDark-400 text-sm">
                   Please enter your account details
                 </p>
               </div>
@@ -198,7 +199,7 @@ const Signin: React.FC<signinProps> = ({}) => {
                     <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                       <svg
                         aria-hidden="true"
-                        className="w-5 h-5 text-gray-500 dark:text-gray-400"
+                        className="w-5 h-5 text-systemLbLight-placeh dark:text-systemLbDark-placeh"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                         xmlns="http://www.w3.org/2000/svg"
@@ -211,8 +212,8 @@ const Signin: React.FC<signinProps> = ({}) => {
                       type="email"
                       id="input-email"
                       {...register("email",{required:true})}
-                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded outline-none focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder={errors.email ? "email required":"name@⚡✉️.com"}
+                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded outline-none focus:ring-systemTintLight-blue focus:border-systemTintLight-blue block w-full pl-10 p-2.5  dark:bg-systemGbgDark-100 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder={errors.email ? "email required":"example@✉️.com"}
                     />
                   </div>
                   {/* <label
@@ -257,8 +258,8 @@ const Signin: React.FC<signinProps> = ({}) => {
                       id="password"
                       autoComplete="off"
                       {...register("password",{required:true,minLength:8,maxLength:64})}
-                      className=" bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded outline-none focus:ring-blue-500 focus:border-blue-500 block w-full pr-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder={errors.password ? "8<📏<64":"💠💠💠💠💠💠💠💠"}
+                      className=" bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded outline-none focus:ring-systemTintLight-blue focus:border-systemTintLight-blue block w-full pr-10 p-2.5  dark:bg-systemGbgDark-100 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder={errors.password ? "8<📏<64":"💠💠💠💠💠💠"}
                     />
                   </div>
                   <button
@@ -268,7 +269,7 @@ const Signin: React.FC<signinProps> = ({}) => {
                     CONTINUE
                   </button>
                   <div className="flex items-center my-4 before:flex-1 before:border-t-2 before:border-gray-300 before:mt-0.5 after:flex-1 after:border-t-2 after:border-gray-300 after:mt-0.5">
-                    <p className="text-center text-gray-500 font-semibold mx-4 mb-0">
+                    <p className="text-center text-systemLbLight-400 dark:text-systemLbDark-400 font-semibold mx-4 mb-0">
                       OR LOGIN WITH
                     </p>
                   </div>
@@ -298,7 +299,7 @@ const Signin: React.FC<signinProps> = ({}) => {
                     <button
                       type="button"
                       onClick={() => signInWithGoogle()}
-                      className="w-1/2 inline-flex items-center justify-center  text-gray-700 dark:text-white border-2 border-gray-200  focus:outline-none focus:border-blue-500 dark:focus:border-blue-800 font-medium rounded text px-5 py-2.5 text-center mr-2 mb-2"
+                      className="w-1/2 inline-flex items-center justify-center  text-gray-700 dark:text-systemLbDark-400 border-2 border-gray-200 dark:border-systemSepDark-sep  focus:outline-none focus:border-blue-500 dark:focus:border-blue-800 font-medium rounded text px-5 py-2.5 text-center mr-2 mb-2"
                     >
                       <svg
                         className="w-6 h-6 mr-2 -ml-2"
@@ -344,7 +345,7 @@ const Signin: React.FC<signinProps> = ({}) => {
                 </form>
               </div>
               <div className="">
-                <p className="text-xs font-medium text-gray-400 truncate">
+                <p className="text-xs font-medium text-systemLbLight-200 dark:text-systemLbDark-200 truncate">
                   This site is protected by reCAPTCHA v3 and the Google <br />{" "}
                   <span className="underline">Privacy Policy</span> and{" "}
                   <span className="underline">Terms of Use</span> apply
@@ -352,7 +353,7 @@ const Signin: React.FC<signinProps> = ({}) => {
               </div>
             </div>
             <div className="p-8 flex-shrink-0">
-              <ul className="flex justify-around text-xs font-medium text-gray-400 ">
+              <ul className="flex justify-around text-xs font-medium text-systemLbLight-200 dark:text-systemLbDark-200 ">
                 <li className="hidden lg:inline-block">Terms Of Use</li>
                 <li>Privacy Policy</li>
                 <li>Cookie Policy</li>
@@ -362,15 +363,15 @@ const Signin: React.FC<signinProps> = ({}) => {
             </div>
           </div>
         ) : (
-          <div className="w-full bg-white flex flex-col justify-between ">
+          <div className="w-full bg-systembgLight-100 dark:bg-systembgDark-100 flex flex-col justify-between ">
             <div className="flex-shrink-0  flex  w-full p-4 px-8 items-center space-x-3">
-              <p className="w-full text-right text-xs font-medium text-gray-500 block">
+              <p className="w-full text-right text-xs font-medium dark:text-systemLbDark-200 text-systemLbLight-200 block">
                 Already have an account?
               </p>
               <button
                 onClick={switchToLogIn}
                 type="button"
-                className="text-xs flex-shrink-0 block font-medium text-gray-700 border-2  rounded px-2 py-1"
+                className="text-xs flex-shrink-0 block font-medium text-systemLbLight-300 dark:text-systemLbDark-300 border-2 border-systemSepDark-sep  rounded px-2 py-1"
               >
                 Log In
               </button>
@@ -381,7 +382,7 @@ const Signin: React.FC<signinProps> = ({}) => {
                 {/* <p className="font-medium text-gray-700 text-3xl">
                   CREATE YOUR ACCOUNT
                 </p> */}
-                <p className="font-semibold text-gray-400 text-sm">
+                <p className="font-semibold text-systemLbLight-400 dark:text-systemLbDark-400 text-sm">
                   Please enter your details
                 </p>
               </div>
@@ -394,14 +395,14 @@ const Signin: React.FC<signinProps> = ({}) => {
                   Username
                 </label> */}
                 <div className="flex relative mb-6">
-                  <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
+                  <span className="inline-flex items-center px-3 text-sm text-gray-900 dark:bg-systembgDark-200 border border-r-0 border-gray-300 rounded-l-md bg-systembgLight-200 dark:text-gray-400 dark:border-gray-600">
                     @
                   </span>
                   <input
                     type="text"
                     id="signup-username"
                     {...register_signup("signup_username",{required:true,maxLength:32})}
-                    className="rounded-none rounded-r-lg bg-gray-50 border text-gray-900 outline-none focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    className="rounded-none rounded-r-lg bg-systembgLight-100 border text-gray-900 outline-none focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5  dark:bg-systembgDark-100 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="elonmusk"
                   />
                 </div>
@@ -428,7 +429,7 @@ const Signin: React.FC<signinProps> = ({}) => {
                       type="email"
                       id="signup-input-email"
                       {...register_signup("signup_email",{required:true})}
-                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded outline-none focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      className=" border border-gray-300 text-gray-900 text-sm rounded outline-none focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-systembgDark-100 bg-systembgLight-100 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       placeholder={errors_signup.signup_email ? "email required":"name@⚡✉️.com"}
                     />
                   </div>
@@ -457,7 +458,7 @@ const Signin: React.FC<signinProps> = ({}) => {
                       id="signup-password"
                       autoComplete="off"
                       {...register_signup("signup_password",{required:true,maxLength:64,minLength:8})}
-                      className=" bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded outline-none focus:ring-blue-500 focus:border-blue-500 block w-full pr-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      className=" bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded outline-none focus:ring-blue-500 focus:border-blue-500 block w-full pr-10 p-2.5  dark:bg-systembgDark-100 bg-systembgLight-100 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       placeholder={errors_signup.signup_password ? "8<📏<64 " :"💠💠💠💠💠💠"}
                     />
                   </div>
@@ -465,7 +466,7 @@ const Signin: React.FC<signinProps> = ({}) => {
                   <div className="flex items-center justify-center w-full mb-6">
                     <label
                       htmlFor="dropzone-file"
-                      className="flex flex-col items-center justify-center w-full  border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+                      className="flex flex-col items-center justify-center w-full  border-2 border-gray-300 border-dashed rounded-lg cursor-pointer dark:hover:bg-bray-800 dark:bg-systembgDark-100 bg-systembgLight-100 hover:bg-gray-100 hover:bg-opacity-30 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600 dark:hover:bg-opacity-30"
                     >
                       { imageUrl ? (
                         <div className="relative w-full h-[140px] overflow-auto">
@@ -512,7 +513,7 @@ const Signin: React.FC<signinProps> = ({}) => {
                 </form>
               </div>
               <div className="">
-                <p className="text-xs font-medium text-gray-400 truncate">
+                <p className="text-xs font-medium text-systemLbLight-200 dark:text-systemLbDark-200 truncate">
                   This site is protected by reCAPTCHA v3 and the Google <br />{" "}
                   <span className="underline">Privacy Policy</span> and{" "}
                   <span className="underline">Terms of Use</span> apply
@@ -520,7 +521,7 @@ const Signin: React.FC<signinProps> = ({}) => {
               </div>
             </div>
             <div className="pb-8 pt-5 flex-shrink-0">
-              <ul className="flex justify-around text-xs font-medium text-gray-400 ">
+              <ul className="flex justify-around text-xs font-medium text-systemLbLight-200 dark:text-systemLbDark-200 ">
                 <li className="hidden lg:inline-block">Terms Of Use</li>
                 <li>Privacy Policy</li>
                 <li>Cookie Policy</li>
