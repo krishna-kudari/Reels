@@ -223,7 +223,7 @@ export default function Home() {
         <div
           ref={rootRef}
           id="snap_container"
-          className="snap snap-y snap-mandatory max-h-screen h-screen overflow-y-scroll bg-gradient-to-br from-white to-slate-100  dark:from-slate-700 dark:to-gray-900"
+          className="snap snap-y snap-mandatory max-h-screen h-screen overflow-y-scroll scroll-smooth bg-gradient-to-br from-white to-slate-100  dark:from-slate-700 dark:to-gray-900"
         >
           {posts.map((post, index) => (
             <div

@@ -17,9 +17,17 @@ import { User } from "firebase/auth";
 import {
   arrayRemove,
   arrayUnion,
+  collection,
+  deleteDoc,
   doc,
   DocumentData,
+  getDoc,
+  getDocs,
+  query,
+  serverTimestamp,
+  setDoc,
   updateDoc,
+  where,
 } from "firebase/firestore";
 import Image from "next/image";
 import { saveAs } from "file-saver";
@@ -32,6 +40,7 @@ import React, {
   useRef,
   useState,
 } from "react";
+import {uuidv4} from '@firebase/util'
 import toast from "react-hot-toast";
 import CommentBox from "./CommentBox";
 
@@ -65,6 +74,9 @@ const VideoElement: React.FC<VideoElementProps> = ({
     if (post.likes.includes(user.uid)) return true;
     return false;
   });
+  const [IsFollowLoading, setIsFollowLoading] = useState(false);
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [followDoc, setFollowDoc] = useState<DocumentData | null>(null);
   const [commentBoxOpen, setCommentBoxOpen] = useState(false);
 
   const playVideo = () => {
@@ -118,6 +130,17 @@ const VideoElement: React.FC<VideoElementProps> = ({
       cleanOb();
     };
   }, [reference]);
+  useEffect(()=>{
+    const setFollowing = async () => {
+      const q = query(collection(db,'follows'),where('follower','==',user.uid),where('following','==',post.userId));
+      const querySnapshot = await getDocs(q);
+      if(querySnapshot.docs.length){
+        setIsFollowing(true);
+        setFollowDoc(querySnapshot.docs[0]);
+      }
+    }
+    setFollowing();
+  },[IsFollowLoading]);
 
   const handleClick = () => {
     if (!isActive) return;
@@ -173,6 +196,40 @@ const VideoElement: React.FC<VideoElementProps> = ({
     xhr.open('GET', post.postVideoUrl);
     xhr.send();
   };
+  const handleFollow = async (e: React.SyntheticEvent) => {
+    e.stopPropagation();
+    console.log("follow");
+    const followId = uuidv4();
+    const followDoc = {
+      id: followId,
+      follower: user.uid,
+      following: post.userId,
+      createdAt: serverTimestamp(),
+    }
+    setIsFollowLoading(true);
+    try {
+      setIsFollowing(true);
+      await setDoc(doc(db,'follows',followId),followDoc);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsFollowLoading(false);
+    }
+  }
+  const handleUnfollow = async (e: React.SyntheticEvent) => {
+    e.stopPropagation();
+    console.log("unfollow");
+    if(followDoc == null)return;
+    setIsFollowLoading(true);
+    try {
+      await deleteDoc(doc(db,'follows',followDoc.id));
+      setIsFollowing(false);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsFollowLoading(false);
+    }
+  }
   return (
     <div ref={reference} className="h-full flex justify-center space-x-1">
       <div
@@ -257,18 +314,28 @@ const VideoElement: React.FC<VideoElementProps> = ({
                 <p className="text-gray-100 text-sm">@{post.username}</p>
               </div>
               <div className="flex items-center">
-                <button
+                {!isFollowing ? <button
                 type="button"
+                disabled={IsFollowLoading || post.userId == user.uid}
+                onClick={handleFollow}
                 className="px-2 py-1 rounded-md font-semibold text-gray-100 bg-red-500"
               >
-                ➕Feed
-              </button>
+                Follow
+              </button> :
+                <button
+                type="button"
+                disabled={IsFollowLoading || post.userId == user.uid}
+                onClick={handleUnfollow}
+                className="px-2 py-1 rounded-md font-semibold text-gray-100 bg-red-500"
+              >
+                Unfollow
+              </button>}
               </div>
               
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-1 dark:bg-gray-700">
+            <div className="w-full bg-gray-200 rounded-full h-[2px] dark:bg-gray-700">
               <div
-                className="bg-red-600 h-1 rounded-full dark:bg-red-500"
+                className="bg-red-600 h-[2px] rounded-full dark:bg-red-500"
                 style={{ width: `${progress}%` }}
               ></div>
             </div>

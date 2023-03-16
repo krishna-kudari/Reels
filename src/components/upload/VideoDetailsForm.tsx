@@ -1,3 +1,4 @@
+import { FilmIcon } from "@heroicons/react/24/solid";
 import React, { Dispatch, MutableRefObject, SetStateAction } from "react";
 import FormWrapper from "./FormWrapper";
 
@@ -14,7 +15,9 @@ type VideoDetailsProps = {
   videoUrl: string;
   uploading: boolean;
   videoRef: MutableRefObject<HTMLVideoElement | null>;
-  setFrmaeZUrl:  Dispatch<SetStateAction<string>>
+  setFrmaeZUrl:  Dispatch<SetStateAction<string>>;
+  videoName: string;
+  progress: number;
 
 };
 const VideoDetailsForm: React.FC<VideoDetailsFormProps & VideoDetailsProps> = ({
@@ -24,7 +27,9 @@ const VideoDetailsForm: React.FC<VideoDetailsFormProps & VideoDetailsProps> = ({
   videoUrl,
   uploading,
   videoRef,
-  setFrmaeZUrl
+  setFrmaeZUrl,
+  videoName,
+  progress,
 }) => {
   return (
     <FormWrapper title="Details">
@@ -61,7 +66,7 @@ const VideoDetailsForm: React.FC<VideoDetailsFormProps & VideoDetailsProps> = ({
             placeholder="Tell something about your video"
           ></textarea>
         </div>
-        <div className="w-2/5">
+        <div className="w-2/5 space-y-6">
           <div className="w-full h-60 border dark:border-gray-500 rounded-md overflow-hidden bg-slate-700">
             <video
               ref={videoRef}
@@ -69,6 +74,19 @@ const VideoDetailsForm: React.FC<VideoDetailsFormProps & VideoDetailsProps> = ({
               controls
               className="w-full h-full object-contain"
             ></video>
+          </div>
+
+          <div className="flex w-full border rounded-md items-center space-x-1 ">
+            <FilmIcon className="w-12 h-12 p-1" />
+            <div className="flex-1 space-y-2 p-2">
+              <div className="flex justify-between">
+                <p>{videoName ? videoName : "no video selected"}</p>
+                <p hidden={!videoName}>{progress}%</p>
+              </div>
+              <div className="rounded-xl h-2 w-full overflow-hidden bg-gray-200">
+                <div style={{width:`${progress}%`}} className={` animate-pulse bg-systemTintLight-blue h-full`}></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

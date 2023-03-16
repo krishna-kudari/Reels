@@ -1,6 +1,6 @@
-import VideoDetailsForm from "@/components/VideoDetailsForm";
-import VideoThumbnailForm from "@/components/VideoThumbnailForm";
-import VideoVisibiityForm from "@/components/VideoVisibiityForm";
+import VideoDetailsForm from "@/components/upload/VideoDetailsForm";
+import VideoThumbnailForm from "@/components/upload/VideoThumbnailForm";
+import VideoVisibiityForm from "@/components/upload/VideoVisibiityForm";
 import { storage } from "@/firebase/storage";
 import { db } from "@/firebase/store";
 import useMultistepForm from "@/hooks/useMultistepForm";
@@ -28,7 +28,8 @@ type FormData = {
   thumb1: File | Blob | null;
   thumb2: File | Blob | null;
   visibility: string;
-
+  tags: Array<string>;
+  code: string;
 };
 
 const INITAL_DATA: FormData = {
@@ -38,6 +39,8 @@ const INITAL_DATA: FormData = {
   thumb1: null,
   thumb2: null,
   visibility: "public",
+  tags: [],
+  code: "",
 };
 interface PublishWizardProps {
   video: File | null;
@@ -46,6 +49,8 @@ interface PublishWizardProps {
   postId: string;
   uploading: boolean;
   downloadVideoUrl: string;
+  videoName: string;
+  progress: number;
 }
 const Page: React.FC<PublishWizardProps> = ({
   video,
@@ -54,10 +59,12 @@ const Page: React.FC<PublishWizardProps> = ({
   postId,
   uploading,
   downloadVideoUrl,
+  videoName,
+  progress,
 }) => {
   const [data, setData] = useState(INITAL_DATA);
   let [step, setStep] = useState(1);
-  const[frameZUrl, setFrameZUrl] = useState('');
+  const [frameZUrl, setFrameZUrl] = useState("");
   const [videoUrl, setVideoUrl] = useState(() => {
     if (!video) return "";
     return URL.createObjectURL(video);
@@ -80,16 +87,24 @@ const Page: React.FC<PublishWizardProps> = ({
     next,
   } = useMultistepForm([
     <VideoDetailsForm
-    key={0}
+      key={0}
       {...data}
       updateFields={updateFields}
       videoUrl={videoUrl}
       uploading={uploading}
       videoRef={videoRef}
       setFrmaeZUrl={setFrameZUrl}
+      videoName={videoName}
+      progress={progress}
     />,
-    <VideoThumbnailForm key={1} {...data} updateFields={updateFields} 
-    videoRef={videoRef} frameZUrl={frameZUrl} videoUrl={videoUrl}/>,
+    <VideoThumbnailForm
+      key={1}
+      {...data}
+      updateFields={updateFields}
+      videoRef={videoRef}
+      frameZUrl={frameZUrl}
+      videoUrl={videoUrl}
+    />,
     <VideoVisibiityForm key={2} {...data} updateFileds={updateFields} />,
   ]);
 
@@ -125,30 +140,33 @@ const Page: React.FC<PublishWizardProps> = ({
             likes: [],
             commentsCount: 0,
             visibility: data.visibility,
+            tags: data.tags,
+            code: data.code,
           };
           await setDoc(doc(db, "posts", postId), postDoc);
           toast.success("published", {
             id: notification,
           });
-          const userRef = doc(db,'users',user.uid);
-          await updateDoc(userRef,{
+          const userRef = doc(db, "users", user.uid);
+          await updateDoc(userRef, {
             posts: arrayUnion(postId),
-          })
+          });
           //animate
-          setStep(steps.length+1);
+          setStep(steps.length + 1);
           setAnimationCompleted(false);
         });
       } catch (error: any) {
         console.log(error);
-        toast.error("whoops! something went wrong",{id:notification});
+        toast.error("whoops! something went wrong", { id: notification });
       } finally {
         setLoading(false);
       }
     } else {
+      if (!data.thumbnail) {
+        toast.error("please choose a thumbnail");
+      } 
       if (uploading) {
         toast.error("wait uploading vedio");
-      } else {
-        toast.error("please choose a thumbnail");
       }
     }
   }
@@ -167,7 +185,9 @@ const Page: React.FC<PublishWizardProps> = ({
             type="button"
             onClick={() => {
               setStep(step > 1 ? step - 1 : step);
-              if(step == 1){setAnimationCompleted(false)}
+              if (step == 1) {
+                setAnimationCompleted(false);
+              }
               back();
             }}
             className="rounded px-2 py-1 hover:bg-gray-200  text-slate-400 dark:hover:bg-slate-600 dark:hover:text-white hover:text-slate-700"
@@ -215,7 +235,10 @@ function Step({ step, currentStep }: stepProps) {
       <motion.div
         variants={backgroundVariants}
         transition={backgroundTransition}
-        className={` ${status == 'inactive' && 'bg-slate-200 border-gray-400 dark:border-gray-500 dark:bg-gray-600'} relative flex h-10 w-10 items-center justify-center rounded-full border-2 border-slate-400 bg-white font-semibold text-slate-500`}
+        className={` ${
+          status == "inactive" &&
+          "bg-slate-200 border-gray-400 dark:border-gray-500 dark:bg-gray-600"
+        } relative flex h-10 w-10 items-center justify-center rounded-full border-2 border-slate-400 bg-white font-semibold text-slate-500`}
       >
         <div className="relative flex items-center justify-center">
           <AnimatePresence>

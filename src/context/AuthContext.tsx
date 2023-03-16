@@ -90,7 +90,7 @@ export const AuthProvider: React.FC<ProviderProps> = ({ children }) => {
           posts : []
         }
         await setDoc(doc(db, "users", uid), userDoc);
-        toast.success("account created");
+        // toast.success("account created");
         console.log(user);
         router.replace("/");
       })
@@ -128,7 +128,7 @@ export const AuthProvider: React.FC<ProviderProps> = ({ children }) => {
           posts : []
         }
         await setDoc(doc(db, "users", uid), userDoc);
-        toast.success("account created");
+        // toast.success("account created");
         router.replace("/")
       })
       .catch((error: any) => {

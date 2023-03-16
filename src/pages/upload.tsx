@@ -2,13 +2,18 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { useDropzone } from "react-dropzone";
 import { motion, useAnimation } from "framer-motion";
-import PublishWizard from "@/components/PublishWizard";
+import PublishWizard from "@/components/upload/PublishWizard";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/router";
 import Loader from "@/components/Loader";
 import { storage } from "@/firebase/storage";
 import { uuidv4 } from "@firebase/util";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  uploadBytesResumable,
+} from "firebase/storage";
 import toast from "react-hot-toast";
 interface uploadProps {}
 
@@ -19,6 +24,8 @@ const Upload: React.FC<uploadProps> = ({}) => {
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
   const [postId, setPostId] = useState("");
   const [uploading, setUploading] = useState(false);
+  const [videoName, setVideoName] = useState("");
+  const [progress, setProgress] = useState(0);
   const [downloadVideoUrl, setDownloadVideoUrl] = useState("");
   const [animationCompleted, setAnimationCompleted] = useState(false);
   const { getRootProps, getInputProps, isDragActive, acceptedFiles } =
@@ -29,7 +36,7 @@ const Upload: React.FC<uploadProps> = ({}) => {
         "video/ogg": [".ogg"],
       },
       onDrop: (acceptedFiles) => {
-        if(acceptedFiles.length == 0)return;
+        if (acceptedFiles.length == 0) return;
         setSelectedFile(acceptedFiles[0]);
         uploadVideo(acceptedFiles[0]);
         console.log(acceptedFiles);
@@ -44,25 +51,51 @@ const Upload: React.FC<uploadProps> = ({}) => {
       alert("No video selected");
       return setAnimationCompleted(false);
     }
+    setVideoName(video.name);
     console.log("publish useEff");
     setUploading(true);
     try {
       const postId = uuidv4();
       setPostId(postId);
       const post_ref = ref(storage, `posts/${postId}/video`);
-      uploadBytes(post_ref, video).then(async (snapshot) => {
-        console.log("uploaded");
-        const videoDownloadUrl = await getDownloadURL(snapshot.ref);
-        console.log(videoDownloadUrl);
-        setDownloadVideoUrl(videoDownloadUrl);
-        toast.success("video uploaded");
-      });
+      const uploadTask = uploadBytesResumable(post_ref, video);
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          setProgress(progress);
+        },
+        (error) => {
+          setPostId("");
+          uploadTask.cancel();
+          console.log("uploadVideo Error:", error);
+          toast.error("whoops! something wnet wrong");
+        },
+        async () => {
+          console.log("uploaded");
+          const videoDownloadUrl = await getDownloadURL(
+            uploadTask.snapshot.ref
+          );
+          console.log(videoDownloadUrl);
+          setDownloadVideoUrl(videoDownloadUrl);
+          toast.success("video uploaded");
+        }
+      );
+      // uploadBytes(post_ref, video).then(async (snapshot) => {
+      //   console.log("uploaded");
+      //   const videoDownloadUrl = await getDownloadURL(uploadTask.snapshot.ref);
+      //   console.log(videoDownloadUrl);
+      //   setDownloadVideoUrl(videoDownloadUrl);
+      //   toast.success("video uploaded");
+      // });
     } catch (error: any) {
       setPostId("");
       console.log("uploadVideo Error:", error);
       toast.error("whoops! something wnet wrong");
     } finally {
       setUploading(false);
+      setVideoName("");
     }
   }
   const dropanimation = useAnimation();
@@ -113,10 +146,16 @@ const Upload: React.FC<uploadProps> = ({}) => {
   return (
     <>
       {loading ? (
-        <Loader count={1} className={"animate-pulse top-32 bg-slate-50 bg-gradient-to-br dark:from-gray-500 dark:to-gray-700 border relative border-gray-100 shadow rounded-3xl  w-full mx-auto  max-w-[80vh] min-h-[60vh]"} />
+        <Loader
+          count={1}
+          className={
+            "animate-pulse top-32 bg-slate-50 bg-gradient-to-br dark:from-gray-500 dark:to-gray-700 border relative border-gray-100 shadow rounded-3xl  w-full mx-auto  max-w-[80vh] min-h-[60vh]"
+          }
+        />
       ) : currentUser ? (
         <div className="flex min-h-screen items-center bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-900 ">
-          { animationCompleted && selectedFile ? (
+          
+          {(animationCompleted && selectedFile) ? (
             <PublishWizard
               video={selectedFile}
               user={currentUser}
@@ -124,6 +163,8 @@ const Upload: React.FC<uploadProps> = ({}) => {
               uploading={uploading}
               postId={postId}
               downloadVideoUrl={downloadVideoUrl}
+              videoName={videoName}
+              progress={progress}
             />
           ) : (
             <div className="mx-auto relative flex flex-col rounded-3xl overflow-hidden bg-white dark:bg-gray-700 w-[95vw] max-w-3xl border border-slate-100 dark:border-gray-500 shadow-sm">

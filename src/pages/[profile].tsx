@@ -3,11 +3,15 @@ import { db } from "@/firebase/store";
 import {
   arrayRemove,
   arrayUnion,
+  deleteDoc,
   doc,
   DocumentData,
   getDoc,
+  serverTimestamp,
+  setDoc,
   updateDoc,
 } from "firebase/firestore";
+import { uuidv4 } from "@firebase/util";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
@@ -26,7 +30,11 @@ import {
 } from "@heroicons/react/24/solid";
 import PostsList from "@/components/PostsList";
 import useVideoPlayer from "@/hooks/useVideoPlayerDev";
-import { ArrowDownTrayIcon, HomeIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowDownTrayIcon,
+  HomeIcon,
+  PlusCircleIcon,
+} from "@heroicons/react/24/outline";
 import toast from "react-hot-toast";
 import CommentBox from "@/components/CommentBox";
 import ThemeButton from "@/components/ThemeButton";
@@ -48,6 +56,9 @@ const Profile: React.FC<ProfileProps> = ({}) => {
     if (selectedPost?.likes.includes(currentUser?.uid)) return true;
     return false;
   });
+  const [IsFollowLoading, setIsFollowLoading] = useState(false);
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [followDoc, setFollowDoc] = useState<DocumentData | null>(null);
   const [CommentBoxOpen, setCommentBoxOpen] = useState(false);
   const {
     isPlaying,
@@ -141,6 +152,41 @@ const Profile: React.FC<ProfileProps> = ({}) => {
         console.log("like Error", error);
         toast.error("whoops! something went wrong");
       }
+    }
+  };
+  const handleFollow = async (e: React.SyntheticEvent) => {
+    if (!profileData || !currentUser) return;
+    e.stopPropagation();
+    console.log("follow");
+    const followId = uuidv4();
+    const followDoc = {
+      id: followId,
+      follower: currentUser.uid,
+      following: profileData.userId,
+      createdAt: serverTimestamp(),
+    };
+    setIsFollowLoading(true);
+    try {
+      setIsFollowing(true);
+      await setDoc(doc(db, "follows", followId), followDoc);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsFollowLoading(false);
+    }
+  };
+  const handleUnfollow = async (e: React.SyntheticEvent) => {
+    e.stopPropagation();
+    console.log("unfollow");
+    if (followDoc == null) return;
+    setIsFollowLoading(true);
+    try {
+      await deleteDoc(doc(db, "follows", followDoc.id));
+      setIsFollowing(false);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsFollowLoading(false);
     }
   };
   return (
@@ -344,7 +390,10 @@ const Profile: React.FC<ProfileProps> = ({}) => {
                         }`}
                       />
 
-                      <ChatBubbleBottomCenterTextIcon onClick={()=>setCommentBoxOpen(!CommentBoxOpen)} className=" videoplayer_element_onscreen" />
+                      <ChatBubbleBottomCenterTextIcon
+                        onClick={() => setCommentBoxOpen(!CommentBoxOpen)}
+                        className=" videoplayer_element_onscreen"
+                      />
                       <EllipsisHorizontalCircleIcon className="videoplayer_element_onscreen " />
                       {isMuted ? (
                         <SpeakerXMarkIcon
@@ -377,12 +426,29 @@ const Profile: React.FC<ProfileProps> = ({}) => {
                           </p>
                         </div>
                         <div className="flex items-center">
-                          <button
-                            type="button"
-                            className="px-2 py-1 rounded-md font-semibold text-gray-100 bg-red-500"
-                          >
-                            ➕Feed
-                          </button>
+                          {!isFollowing ? (
+                            <button
+                              type="button"
+                              disabled={
+                                IsFollowLoading || selectedPost.userId == currentUser?.uid
+                              }
+                              onClick={handleFollow}
+                              className="px-2 py-1 rounded-md font-semibold text-gray-100 bg-red-500"
+                            >
+                              Follow
+                            </button>
+                          ) : (
+                            <button
+                              type="button"
+                              disabled={
+                                IsFollowLoading || selectedPost.userId == currentUser?.uid
+                              }
+                              onClick={handleUnfollow}
+                              className="px-2 py-1 rounded-md font-semibold text-gray-100 bg-red-500"
+                            >
+                              Unfollow
+                            </button>
+                          )}
                         </div>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-0.5 dark:bg-gray-700">
@@ -411,7 +477,10 @@ const Profile: React.FC<ProfileProps> = ({}) => {
                       }`}
                     />
                   </div>
-                  <div onClick={()=>setCommentBoxOpen(!CommentBoxOpen)} className="">
+                  <div
+                    onClick={() => setCommentBoxOpen(!CommentBoxOpen)}
+                    className=""
+                  >
                     <ChatBubbleBottomCenterTextIcon className=" videoplayer_element" />
                   </div>
                   <div>
@@ -437,7 +506,9 @@ const Profile: React.FC<ProfileProps> = ({}) => {
                     )}
                   </div>
                 </div>
-                {CommentBoxOpen && <CommentBox post={selectedPost} currentUser={currentUser}  />}
+                {CommentBoxOpen && (
+                  <CommentBox post={selectedPost} currentUser={currentUser} />
+                )}
               </div>
             </div>
           )}

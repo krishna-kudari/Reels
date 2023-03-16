@@ -69,6 +69,17 @@
   background: rgb(130, 130, 130);
   border-radius: 5px;
 }
+#code-textarea::-webkit-scrollbar {
+  width: 4px;
+}
+
+#code-textarea::-webkit-scrollbar-track {
+  background: #00000000;
+}
+#code-textarea::-webkit-scrollbar-thumb {
+  background: rgb(130, 130, 130);
+  border-radius: 5px;
+}
 
 #snap_container::-webkit-scrollbar {
   width: 0;
