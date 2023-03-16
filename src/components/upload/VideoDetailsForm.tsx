@@ -76,12 +76,12 @@ const VideoDetailsForm: React.FC<VideoDetailsFormProps & VideoDetailsProps> = ({
             ></video>
           </div>
 
-          <div className="flex w-full border rounded-md items-center space-x-1 ">
+          <div className="flex w-full border border-systemSepDark-sep rounded-md items-center space-x-1 ">
             <FilmIcon className="w-12 h-12 p-1" />
-            <div className="flex-1 space-y-2 p-2">
+            <div className="flex-1 space-y-2 p-2 text-systemLbLight-400 dark:text-systemLbDark-400">
               <div className="flex justify-between">
-                <p>{videoName ? videoName : "no video selected"}</p>
-                <p hidden={!videoName}>{progress}%</p>
+                <p>{ videoName }</p>
+                <p >{progress}%</p>
               </div>
               <div className="rounded-xl h-2 w-full overflow-hidden bg-gray-200">
                 <div style={{width:`${progress}%`}} className={` animate-pulse bg-systemTintLight-blue h-full`}></div>

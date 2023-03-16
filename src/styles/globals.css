@@ -89,9 +89,8 @@ body::-webkit-scrollbar {
 }
 
 html.dark {
-  --white: #334155;
+  --white: #0A84FFFF;
   --slate-200: #64748B;
-  
 }
 
 html {
@@ -114,7 +113,7 @@ html {
   --blue-200-accent: #448aff;
   --blue-400-accent: #2979ff;
   --blue-700-accent: #2962ff;
-  --white: #FFFFFF;
+  --white: #0A84FFFF;
   --slate-200:rgb(226, 232, 240);
   --slate-400: rgb(148, 163, 184);
   --indigo-500:#4F46E5;

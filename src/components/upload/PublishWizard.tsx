@@ -292,12 +292,12 @@ let backgroundVariants = {
   inactive: {
     background: "var(--white)",
     borderColor: "var(--slate-200)",
-    color: "var(--slate-400)",
+    color: "var(--slate-200)",
   },
   active: {
     background: "var(--white)",
-    borderColor: "var(--indigo-500)",
-    color: "var(--indigo-500)",
+    borderColor: "#FFFFFFFF",
+    color: "#FFFFFFFF",
   },
   complete: {
     background: "var(--indigo-500)",
