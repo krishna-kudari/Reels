@@ -120,7 +120,7 @@ const PostsList: React.FC<PostsListProps> = ({
           <span className="sr-only">Loading...</span>
         </div>
       ) : (
-        <div className="container mx-auto px-4 py-12 rounded-t-3xl shadow-sm bg-white lg:px-32 lg:pt-12">
+        <div className="container mx-auto px-4 py-12 rounded-t-3xl shadow-sm bg-white dark:bg-systemGrayDark-200 lg:px-32 lg:pt-12">
           <div className="-m-1 flex flex-wrap md:-m-2 pb-4">
             {posts.map((post: DocumentData & { id: string }, index) => (
               <div key={post.id} className="flex w-1/2 p-1 md:p-2 overflow-hidden md:w-1/3 lg:w-1/4 ">
@@ -151,7 +151,7 @@ const PostsList: React.FC<PostsListProps> = ({
           <button
             type="button"
             onClick={handleLoadMore}
-            className="px-2 py-1 mx-auto flex items-center bg-gray-700  bg-opacity-50 rounded-lg text-stone-100 text-lg font-medium"
+            className="px-2 py-1 mx-auto flex items-center bg-systemGrayLight-300 dark:bg-systemGrayDark-300  bg-opacity-50 rounded-full text-systemLbLight-400 dark:text-systemLbDark-400 text-lg font-medium"
           >
             <span>{!moreLoading ?'Load more' : 'Loading'}{" "}</span>
             {moreLoading ? (

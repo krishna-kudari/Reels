@@ -110,7 +110,7 @@ export default function Home() {
   console.log("Home", loading, currentUser);
   return (
     <>
-      <div className="absolute top-0 w-screen  bg-white bg-opacity-25 backdrop-blur-sm border-1 flex justify-between z-30">
+      <div className="absolute top-0 w-screen  bg-white dark:bg-systemGrayDark-200 bg-opacity-25 backdrop-blur-sm border-1 flex justify-between z-30">
         <div
           className={`w-1/2 p-2 px-4 space-x-2 justify-between flex items-center`}
         >
@@ -123,7 +123,7 @@ export default function Home() {
                 alt={"🎬🎞️"}
               />
             </div>
-            <p className="hidden sm:block font-bold text-xl text-slate-900 ">
+            <p className="hidden sm:block font-bold text-xl text-slate-900 dark:text-systemLbDark-400">
               reels
             </p>
           </div>
@@ -134,7 +134,7 @@ export default function Home() {
         >
           <div className="group relative inline-block">
             <Link href={"/"}>
-              <HomeIcon className="h-7 w-7 dark:text-slate-50  text-gray-900 hover:scale-90 transition-all duration-300 ease-in-out" />
+              <HomeIcon className="h-7 w-7 dark:text-systemLbDark-400  text-systemLbLight-400 hover:scale-90 transition-all duration-300 ease-in-out" />
             </Link>
             <div className="absolute top-full left-1/2 z-20 mt-3 -translate-x-1/2 whitespace-nowrap rounded bg-black py-[6px] px-4 text-sm font-semibold text-white opacity-0 group-hover:opacity-100">
               <span className="absolute top-[-3px] left-1/2 -z-10 h-2 w-2 -translate-x-1/2 rotate-45 rounded-sm bg-black"></span>
@@ -151,7 +151,7 @@ export default function Home() {
           </div>
           <div className="group relative inline-block">
             <Link href={"/upload"}>
-              <PlusCircleIcon className="w-10 h-10 cursor-pointer text-stone-900 dark:text-gray-100 rounded-full hover:scale-105 " />
+              <PlusCircleIcon className="w-10 h-10 cursor-pointer text-systemLbLight-400 dark:text-systemLbDark-400 rounded-full hover:scale-105 " />
             </Link>
             <div className="absolute top-full left-1/2 z-20 mt-3 -translate-x-1/2 whitespace-nowrap rounded bg-black py-[6px] px-4 text-sm font-semibold text-white opacity-0 group-hover:opacity-100">
               <span className="absolute top-[-3px] left-1/2 -z-10 h-2 w-2 -translate-x-1/2 rotate-45 rounded-sm bg-black"></span>
@@ -163,7 +163,7 @@ export default function Home() {
             <div role="status">
               <svg
                 aria-hidden="true"
-                className="w-8 h-8 mr-2 text-gray-600 animate-spin dark:text-gray-600 fill-gray-100"
+                className="w-8 h-8 mr-2 text-systemGrayLight-300 animate-spin dark:text-systemGrayDark-300 fill-gray-100"
                 viewBox="0 0 100 101"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -184,8 +184,8 @@ export default function Home() {
               <Link
                 href={`/${currentUser.username}?profileId=${currentUser.uid}`}
               >
-                <div className="flex space-x-1 items-center p-1 px-2 cursor-pointer rounded-xl hover:scale-105 transition-all duration-300 ease-in-out bg-white">
-                  <p className="hidden lg:block font-semibold text-base ">
+                <div className="flex space-x-1 items-center p-1 px-2 cursor-pointer rounded-xl  duration-200 bg-systemGrayLight-200 dark:bg-systemGrayDark-300">
+                  <p className="hidden lg:block font-semibold text-base text-systemLbLight-400 dark:text-systemLbDark-400">
                     {currentUser.username}
                   </p>
                   <div className="relative  h-8 w-8 rounded-lg ">
@@ -205,8 +205,8 @@ export default function Home() {
             </div>
           ) : (
             <Link href={"/signin"}>
-              <div className="flex items-center p-1 px-2 cursor-pointer rounded-lg hover:scale-105 transition-all duration-300 ease-in-out bg-white">
-                <p className="font-semibold text-base text-gray-800 ">signin</p>
+              <div className="flex items-center p-1 px-2 cursor-pointer rounded-xl dark:hover:bg-systemGrayDark-100 hover:bg-systemGrayLight-100 duration-200 bg-systemGrayLight-300 dark:bg-systemGrayDark-300">
+                <p className="font-semibold text-base text-gray-800 dark:text-systemLbDark-400">signin</p>
               </div>
             </Link>
           )}
@@ -216,14 +216,14 @@ export default function Home() {
         <Loader
           count={4}
           className={
-            "animate-pulse bg-slate-50 bg-gradient-to-br dark:from-gray-500 dark:to-gray-700 border relative border-gray-100 shadow rounded-3xl  w-full mx-auto  max-w-[350px] min-h-[80vh]"
+            "animate-pulse bg-slate-50 bg-gradient-to-br dark:from-systemGrayDark-300 dark:to-systemGrayDark-200 border relative border-gray-100 dark:border-none shadow rounded-3xl  w-full mx-auto  max-w-[350px] min-h-[80vh]"
           }
         />
       ) : currentUser ? (
         <div
           ref={rootRef}
           id="snap_container"
-          className="snap snap-y snap-mandatory max-h-screen h-screen overflow-y-scroll scroll-smooth bg-gradient-to-br from-white to-slate-100  dark:from-slate-700 dark:to-gray-900"
+          className="snap snap-y snap-mandatory max-h-screen h-screen overflow-y-scroll scroll-smooth bg-gradient-to-br from-white to-slate-100  dark:from-systemGrayDark-200 dark:to-systemGrayDark-100"
         >
           {posts.map((post, index) => (
             <div

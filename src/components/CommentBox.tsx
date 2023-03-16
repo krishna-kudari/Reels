@@ -84,7 +84,7 @@ const Comment: React.FC<commentProps> = ({ post, currentUser }) => {
   }, [publishing]);
 
   return (
-    <div className="w-max bg-stone-50 border rounded-3xl flex-col flex overflow-hidden">
+    <div className="w-max bg-systemGrayLight-100 dark:bg-systemGrayDark-300 rounded-3xl flex-col flex overflow-hidden">
       {/* comment Text box */}
       <form
         onSubmit={handleprimaryCommentPost}
@@ -96,31 +96,31 @@ const Comment: React.FC<commentProps> = ({ post, currentUser }) => {
           required
           value={commentText}
           onChange={(event) => setCommentText(event.target.value)}
-          className="p-2 border w-full flex-1 rounded-md outline-none focus:scale-105 duration-200 focus:border-gray-400"
+          className="p-2 w-full flex-1 rounded-md outline-none dark:text-systemLbDark-400   dark:bg-systembgDark-100"
           name="commentText"
           id="commentText"
         />
         <button disabled={publishing} type="submit">
           <PaperAirplaneIcon
             // onClick={handleprimaryCommentPost}
-            className="w-10 h-10 p-2 text-gray-400 rounded-full bg-white"
+            className="w-10 h-10 p-2 text-gray-400 rounded-full dark:hover:bg-systembgDark-200 hover:bg-systemGrayLight-400 dark:bg-systembgDark-100 bg-systemGrayLight-100"
           />
         </button>
       </form>
-      <hr className="w-full " />
+      <hr className="h-px bg-systemSepLight-sep border-0 dark:bg-systemSepDark-sep" />
       {/* comments List */}
       <div id="comment_box" className="overflow-y-auto">
 
       {comments?.map((comment: DocumentData, index: number) => (
         <div key={comment._id} className="">
-        <div className="bg-white dark:bg-gray-800 text-black dark:text-gray-200 p-4 antialiased flex w-full max-w-lg">
+        <div className="bg-white dark:bg-systembgDark-100 text-black dark:text-gray-200 p-4 antialiased flex w-full max-w-lg">
           <img
             alt="❤️"
             className="rounded-full h-8 w-8 mr-2 mt-1 "
             src={comment.author_profile_pic_url}
           />
           <div className="flex-1">
-            <div className="bg-gray-100  dark:bg-gray-700 rounded-3xl px-4 pt-2 pb-2.5">
+            <div className="bg-gray-100  dark:bg-systemGrayDark-300 rounded-3xl px-4 pt-2 pb-2.5">
               <div className="font-semibold text-sm leading-relaxed">
                 {comment.author_name}
               </div>
@@ -131,7 +131,7 @@ const Comment: React.FC<commentProps> = ({ post, currentUser }) => {
             <div className="text-sm ml-4 mt-0.5 text-gray-500 dark:text-gray-400">
               14 w
             </div>
-            <div className="bg-white dark:bg-gray-700 border border-white dark:border-gray-700 rounded-full float-right -mt-8 mr-0.5 flex shadow items-center ">
+            <div className="bg-white dark:bg-systemGrayDark-300 border border-white dark:border-gray-700 rounded-full float-right -mt-8 mr-0.5 flex shadow items-center ">
               <svg
                 className="p-0.5 h-5 w-5 rounded-full z-20 bg-white dark:bg-gray-700"
                 xmlns="http://www.w3.org/2000/svg"
@@ -247,7 +247,7 @@ const Comment: React.FC<commentProps> = ({ post, currentUser }) => {
             </div>
           </div>
         </div>
-          <hr className="w-full " />
+        <hr className="h-px bg-systemSepLight-sep border-0 dark:bg-systemSepDark-sep" />
         </div>
       ))}
       </div>

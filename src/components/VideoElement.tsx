@@ -11,7 +11,7 @@ import {
   PlayIcon,
   SpeakerWaveIcon,
   SpeakerXMarkIcon,
-} from "@heroicons/react/24/solid";
+} from "@heroicons/react/24/outline";
 import { error } from "console";
 import { User } from "firebase/auth";
 import {
@@ -115,6 +115,7 @@ const VideoElement: React.FC<VideoElementProps> = ({
           setActiveTab(post.id);
           playVideo();
         }else{
+          setIsFollowLoading(false);
           setCommentBoxOpen(false);
         }
       },
@@ -140,7 +141,7 @@ const VideoElement: React.FC<VideoElementProps> = ({
       }
     }
     setFollowing();
-  },[IsFollowLoading]);
+  },[IsFollowLoading,isActive]);
 
   const handleClick = () => {
     if (!isActive) return;
@@ -234,7 +235,7 @@ const VideoElement: React.FC<VideoElementProps> = ({
     <div ref={reference} className="h-full flex justify-center space-x-1">
       <div
         onClick={handleClick}
-        className="video-wrapper relative flex justify-center items-center overflow-hidden h-full w-[335px]  dark:bg-gray-600 bg-slate-50 rounded-xl bg-center bg-cover bg-no-repeat"
+        className="video-wrapper relative flex justify-center items-center overflow-hidden h-full w-[335px]  dark:bg-systemGrayDark-300 bg-slate-50 rounded-xl bg-center bg-cover bg-no-repeat"
         style={{ backgroundImage: `url(${post.postThumbnailUrl})` }}
       >
         {isActive ? (
@@ -302,8 +303,8 @@ const VideoElement: React.FC<VideoElementProps> = ({
               {post.postTitle}
             </p>
             <div className="flex justify-between px-4 pb-2">
-              <div className="flex items-center">
-                <div className="relative w-9 h-9 rounded-full ">
+              <div className="flex items-center space-x-1">
+                <div className="relative w-9 h-9 rounded-full overflow-hidden">
                   <Image
                     fill
                     src={post.user_profile_pic_url}
@@ -316,17 +317,19 @@ const VideoElement: React.FC<VideoElementProps> = ({
               <div className="flex items-center">
                 {!isFollowing ? <button
                 type="button"
-                disabled={IsFollowLoading || post.userId == user.uid}
+                disabled={IsFollowLoading }
+                hidden ={post.userId == user.uid}
                 onClick={handleFollow}
-                className="px-2 py-1 rounded-md font-semibold text-gray-100 bg-red-500"
+                className="px-3 py-1 rounded-full font-semibold text-gray-100 bg-systemGrayDark-400"
               >
                 Follow
               </button> :
                 <button
                 type="button"
-                disabled={IsFollowLoading || post.userId == user.uid}
+                disabled={IsFollowLoading }
+                hidden ={post.userId == user.uid}
                 onClick={handleUnfollow}
-                className="px-2 py-1 rounded-md font-semibold text-gray-100 bg-red-500"
+                className="px-2 py-1 rounded-full font-semibold text-systemLbLight-400 bg-systemGrayLight-200"
               >
                 Unfollow
               </button>}

@@ -15,6 +15,7 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 import toast from "react-hot-toast";
+import ThemeButton from "@/components/ThemeButton";
 interface uploadProps {}
 
 const Upload: React.FC<uploadProps> = ({}) => {
@@ -149,13 +150,15 @@ const Upload: React.FC<uploadProps> = ({}) => {
         <Loader
           count={1}
           className={
-            "animate-pulse top-32 bg-slate-50 bg-gradient-to-br dark:from-gray-500 dark:to-gray-700 border relative border-gray-100 shadow rounded-3xl  w-full mx-auto  max-w-[80vh] min-h-[60vh]"
+            "animate-pulse top-32 bg-slate-50 bg-gradient-to-br dark:from-systemGrayDark-200 dark:to-systemGrayDark-300 border relative border-gray-100 dark:border-none shadow rounded-3xl  w-full mx-auto  max-w-[80vh] min-h-[60vh]"
           }
         />
       ) : currentUser ? (
-        <div className="flex min-h-screen items-center bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-900 ">
-          
-          {(animationCompleted && selectedFile) ? (
+        <div className="flex min-h-screen relative items-center bg-gradient-to-br from-slate-100 to-slate-200 dark:from-systemGrayDark-200 dark:to-systemGrayDark-100 ">
+          <div className="absolute z-20 h-fit w-fit top-3 left-3">
+            <ThemeButton />
+          </div>
+          {animationCompleted && selectedFile ? (
             <PublishWizard
               video={selectedFile}
               user={currentUser}
@@ -167,17 +170,17 @@ const Upload: React.FC<uploadProps> = ({}) => {
               progress={progress}
             />
           ) : (
-            <div className="mx-auto relative flex flex-col rounded-3xl overflow-hidden bg-white dark:bg-gray-700 w-[95vw] max-w-3xl border border-slate-100 dark:border-gray-500 shadow-sm">
-              <div className="w-full border-b dark:border-b-gray-500 flex justify-between items-center bg-white dark:bg-gray-700">
-                <p className="text-xl font-bold text-slate-800 dark:text-gray-300 p-4 ">
+            <div className="mx-auto relative flex flex-col rounded-3xl overflow-hidden bg-white dark:bg-systemGrayDark-300 w-[95vw] max-w-3xl border border-slate-100 dark:border-gray-500 shadow-sm">
+              <div className="w-full border-b dark:border-b-systemSepDark-sep flex justify-between items-center">
+                <p className="text-xl font-bold text-slate-800 dark:text-systemLbDark-400 p-4 ">
                   Upload a video
                 </p>
                 <div
                   onClick={() => router.replace("/")}
-                  className=" rounded-full bg-gray-100 dark:bg-gray-600 p-1 mr-4"
+                  className=" rounded-full bg-gray-100 dark:bg-systemGrayDark-500 p-1 mr-4"
                 >
                   <svg
-                    className="w-5 h-5 text-gray-500 dark:text-gray-400"
+                    className="w-5 h-5 text-gray-500 dark:text-systemGrayDark-300"
                     fill="currentColor"
                     viewBox="0 -50 700 700"
                     xmlns="http://www.w3.org/2000/svg"
@@ -194,7 +197,7 @@ const Upload: React.FC<uploadProps> = ({}) => {
                   htmlFor="video_input_1"
                   className={`py-16  flex flex-col justify-center items-center space-y-4 cursor-pointer ${
                     isDragActive
-                      ? "bg-gray-100 dark:bg-slate-500 border border-gray-300 dark:border-slate-400 border-dashed"
+                      ? "bg-gray-100 dark:bg-systemGrayDark-400 border border-gray-300 dark:border-slate-400 border-dashed"
                       : "border border-transparent"
                   }`}
                 >

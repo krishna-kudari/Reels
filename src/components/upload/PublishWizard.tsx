@@ -172,7 +172,7 @@ const Page: React.FC<PublishWizardProps> = ({
   }
 
   return (
-    <div className="mx-auto min-h-[85vh]  w-full max-w-6xl rounded-3xl bg-white dark:bg-gray-700 border-slate-100 dark:border-gray-500 shadow flex flex-col">
+    <div className="mx-auto min-h-[85vh]  w-full max-w-6xl rounded-3xl bg-white dark:bg-systemGrayDark-300 border-slate-100 dark:border-none shadow flex flex-col">
       <div className="flex justify-between rounded p-8">
         {steps.map((_: any, index: number) => (
           <Step key={index + 1} step={index + 1} currentStep={step} />
@@ -190,7 +190,7 @@ const Page: React.FC<PublishWizardProps> = ({
               }
               back();
             }}
-            className="rounded px-2 py-1 hover:bg-gray-200  text-slate-400 dark:hover:bg-slate-600 dark:hover:text-white hover:text-slate-700"
+            className="rounded-full px-2 py-1 hover:bg-gray-200  dark:text-systemLbDark-300 dark:hover:bg-systemGrayDark-200 dark:hover:text-white hover:text-slate-700"
           >
             Back
           </button>
@@ -200,7 +200,7 @@ const Page: React.FC<PublishWizardProps> = ({
               setStep(step < steps.length ? step + 1 : step);
               onSubmit(e);
             }}
-            className={`bg flex items-center justify-center rounded-full bg-blue-500 p-2 font-medium tracking-tight text-white hover:bg-blue-600 active:bg-blue-700`}
+            className={`bg animate-bouncex flex items-center justify-center rounded-full bg-blue-500 p-2 font-medium tracking-tight text-white hover:bg-blue-600 active:bg-blue-700`}
           >
             <ArrowRightIcon className="white w-4 h-4 " />
           </button>
@@ -291,8 +291,8 @@ let backgroundTransition = { duration: t(0.2) };
 let backgroundVariants = {
   inactive: {
     background: "var(--white)",
-    borderColor: "var(--slate-200)",
-    color: "var(--slate-200)",
+    borderColor: "var(--white)",
+    color: "#FFFFFFFF",
   },
   active: {
     background: "var(--white)",
@@ -300,8 +300,8 @@ let backgroundVariants = {
     color: "#FFFFFFFF",
   },
   complete: {
-    background: "var(--indigo-500)",
-    borderColor: "var(--indigo-500)",
+    background: "var(--white)",
+    borderColor: "var(--white)",
   },
 };
 

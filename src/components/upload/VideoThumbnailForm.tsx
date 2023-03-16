@@ -87,11 +87,11 @@ const VideoThumbnailForm: React.FC<
           </a>
         </p>
         <div className="flex space-x-2">
-          <div className="flex-1 py-4 h-min border-2 border-dashed w-3/5 flex flex-wrap space-x-6 space-y-2 bg-slate-100 rounded-lg dark:bg-gray-700">
+          <div className="flex-1 py-4 h-min border-2 border-dashed dark:border-systemSepDark-sep w-3/5 flex flex-wrap space-x-6 space-y-2 bg-slate-100 rounded-lg dark:bg-systemGrayDark-200">
             <label
               htmlFor="thumbnail"
               title="Browse thumbnail"
-              className="bg-gray-50 dark:bg-gray-800 w-40 h-40 ml-6 border dark:border-gray-500 rounded-lg border-dashed cursor-pointer"
+              className="bg-gray-50 dark:bg-systemGrayDark-300 w-40 h-40 ml-6  rounded-lg  cursor-pointer"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

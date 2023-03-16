@@ -10,15 +10,26 @@ module.exports = {
       fontFamily: {
         Inter: ["Inter var", "sans serif"],
       },
-      animation: {
-        "fill-radial": "fill 2s forwards",
-      },
       keyframes: {
         fill: {
-          "0% 100%": {
+          "0%, 100%": {
             background: "radial-gradient(circle, #000 0%, #000 100%)",
           },
         },
+        bouncex: {
+          "0%, 100%": {
+            transform: 'translateX(-25%)',
+            'animation-timing-function': 'cubic-bezier(0.8, 0, 1, 1)',
+          },
+          '50%': {
+            transform: 'translateX(0)',
+            'animation-timing-function': 'cubic-bezier(0, 0, 0.2, 1)',
+          }
+        },
+      },
+      animation: {
+        "fill-radial": "fill 2s forwards",
+        bouncex: 'bouncex 1s infinite',
       },
       colors: {
         systembgLight : {

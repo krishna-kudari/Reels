@@ -47,7 +47,7 @@ const VideoDetailsForm: React.FC<VideoDetailsFormProps & VideoDetailsProps> = ({
               id="title"
               value={videoTitle}
               onChange={(e) => updateFields({ videoTitle: e.target.value })}
-              className=" rounded-lg bg-gray-50 border text-gray-900  focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className=" rounded-lg bg-gray-50 border text-gray-900 outline-none block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5  dark:bg-systemGrayDark-200 dark:border-systemSepDark-sep dark:placeholder-gray-400 dark:text-white "
               placeholder="Add video Title here"
             />
           </div>
@@ -62,12 +62,12 @@ const VideoDetailsForm: React.FC<VideoDetailsFormProps & VideoDetailsProps> = ({
             rows={4}
             value={videoDescription}
             onChange={(e) => updateFields({ videoDescription: e.target.value })}
-            className="block p-2.5 w-full text-sm resize-none text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            className="block p-2.5 w-full text-sm resize-none text-gray-900 bg-gray-50 rounded-lg border outline-none border-gray-300 dark:bg-systemGrayDark-200 dark:border-systemSepDark-sep dark:placeholder-gray-400 dark:text-white "
             placeholder="Tell something about your video"
           ></textarea>
         </div>
         <div className="w-2/5 space-y-6">
-          <div className="w-full h-60 border dark:border-gray-500 rounded-md overflow-hidden bg-slate-700">
+          <div className="w-full h-60 border dark:border-systemSepDark-sep rounded-md overflow-hidden bg-systemGrayDark-200">
             <video
               ref={videoRef}
               src={videoUrl}
@@ -77,10 +77,10 @@ const VideoDetailsForm: React.FC<VideoDetailsFormProps & VideoDetailsProps> = ({
           </div>
 
           <div className="flex w-full border border-systemSepDark-sep rounded-md items-center space-x-1 ">
-            <FilmIcon className="w-12 h-12 p-1" />
+            <FilmIcon className="w-12 h-12 p-1 text-systemTintDark-blue" />
             <div className="flex-1 space-y-2 p-2 text-systemLbLight-400 dark:text-systemLbDark-400">
               <div className="flex justify-between">
-                <p>{ videoName }</p>
+                <p>{`${videoUrl? videoName: "no video selected"}`}</p>
                 <p >{progress}%</p>
               </div>
               <div className="rounded-xl h-2 w-full overflow-hidden bg-gray-200">
