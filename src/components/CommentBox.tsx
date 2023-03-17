@@ -84,16 +84,19 @@ const Comment: React.FC<commentProps> = ({ post, currentUser }) => {
   }, [publishing]);
 
   return (
-    <div className="w-max bg-systemGrayLight-100 dark:bg-systemGrayDark-300 rounded-3xl flex-col flex overflow-hidden">
+    <div className="w-full sm:w-max sm:max-w-sm bg-systemGrayLight-100 dark:bg-systemGrayDark-300 rounded-t-3xl sm:rounded-3xl flex-col flex overflow-hidden h-full">
       {/* comment Text box */}
       <form
         onSubmit={handleprimaryCommentPost}
         className="flex space-x-4 p-3 py-4 items-center"
-      >
+        autoComplete="off"
+      > 
+      <input hidden autoComplete="false" />
         <input
           placeholder="write...."
           type="text"
           required
+          // autoComplete="off"
           value={commentText}
           onChange={(event) => setCommentText(event.target.value)}
           className="p-2 w-full flex-1 rounded-md outline-none dark:text-systemLbDark-400   dark:bg-systembgDark-100"

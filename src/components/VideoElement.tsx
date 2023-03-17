@@ -40,7 +40,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import {uuidv4} from '@firebase/util'
+import { uuidv4 } from "@firebase/util";
 import toast from "react-hot-toast";
 import CommentBox from "./CommentBox";
 
@@ -114,7 +114,7 @@ const VideoElement: React.FC<VideoElementProps> = ({
           console.log("post intersecting", post);
           setActiveTab(post.id);
           playVideo();
-        }else{
+        } else {
           setIsFollowLoading(false);
           setCommentBoxOpen(false);
         }
@@ -131,17 +131,21 @@ const VideoElement: React.FC<VideoElementProps> = ({
       cleanOb();
     };
   }, [reference]);
-  useEffect(()=>{
+  useEffect(() => {
     const setFollowing = async () => {
-      const q = query(collection(db,'follows'),where('follower','==',user.uid),where('following','==',post.userId));
+      const q = query(
+        collection(db, "follows"),
+        where("follower", "==", user.uid),
+        where("following", "==", post.userId)
+      );
       const querySnapshot = await getDocs(q);
-      if(querySnapshot.docs.length){
+      if (querySnapshot.docs.length) {
         setIsFollowing(true);
         setFollowDoc(querySnapshot.docs[0]);
       }
-    }
+    };
     setFollowing();
-  },[IsFollowLoading,isActive]);
+  }, [IsFollowLoading, isActive]);
 
   const handleClick = () => {
     if (!isActive) return;
@@ -190,11 +194,11 @@ const VideoElement: React.FC<VideoElementProps> = ({
     console.log("handleDownload called", post.id);
     // This can be downloaded directly:
     const xhr = new XMLHttpRequest();
-    xhr.responseType = 'blob';
+    xhr.responseType = "blob";
     xhr.onload = (event) => {
       const blob = xhr.response;
     };
-    xhr.open('GET', post.postVideoUrl);
+    xhr.open("GET", post.postVideoUrl);
     xhr.send();
   };
   const handleFollow = async (e: React.SyntheticEvent) => {
@@ -206,31 +210,31 @@ const VideoElement: React.FC<VideoElementProps> = ({
       follower: user.uid,
       following: post.userId,
       createdAt: serverTimestamp(),
-    }
+    };
     setIsFollowLoading(true);
     try {
       setIsFollowing(true);
-      await setDoc(doc(db,'follows',followId),followDoc);
+      await setDoc(doc(db, "follows", followId), followDoc);
     } catch (error) {
       console.log(error);
     } finally {
       setIsFollowLoading(false);
     }
-  }
+  };
   const handleUnfollow = async (e: React.SyntheticEvent) => {
     e.stopPropagation();
     console.log("unfollow");
-    if(followDoc == null)return;
+    if (followDoc == null) return;
     setIsFollowLoading(true);
     try {
-      await deleteDoc(doc(db,'follows',followDoc.id));
+      await deleteDoc(doc(db, "follows", followDoc.id));
       setIsFollowing(false);
     } catch (error) {
       console.log(error);
     } finally {
       setIsFollowLoading(false);
     }
-  }
+  };
   return (
     <div ref={reference} className="h-full flex justify-center space-x-1">
       <div
@@ -259,7 +263,7 @@ const VideoElement: React.FC<VideoElementProps> = ({
             alt="thumbnail"
           />
         )}
-        <div className="opacity-0 hover:opacity-100 absolute z-20 bg-gradient-to-t bg-opacity-5 from-gray-900 via-transparent to-transparent w-full h-full">
+        <div className="sm:opacity-0 sm:hover:opacity-100 opacity-100 absolute z-20 bg-gradient-to-t bg-opacity-5 from-gray-900 via-transparent to-transparent w-full h-full">
           {!isPlaying ? (
             <PlayIcon
               className=" absolute top-2 left-2 w-6 h-6 text-white cursor-pointer"
@@ -272,32 +276,40 @@ const VideoElement: React.FC<VideoElementProps> = ({
             />
           )}
           <div className="sm:hidden  absolute right-0 top-1/2 transform-cpu -translate-y-1/2 flex flex-col justify-end p-3 space-y-8 rounded-md ">
-        <HeartIcon
-          onClick={handleLike}
-          className={`videoplayer_element_onscreen ${liked && "text-[#FF0084] dark:text-[#FF0084]"}`}
-        />
-        <HandThumbDownIcon
-          onClick={handleDislike}
-          className={`videoplayer_element_onscreen ${
-            !liked && "text-gray-900 bg-white bg-opacity-25 backdrop-blur-md"
-          }`}
-        />
-        
-        <ChatBubbleBottomCenterTextIcon onClick={()=>{setCommentBoxOpen(!commentBoxOpen);console.log("commentSVGClick");
-        }} className=" videoplayer_element_onscreen" />
-        <EllipsisHorizontalCircleIcon className="videoplayer_element_onscreen " />
-        {isMuted ? (
-          <SpeakerXMarkIcon
-            className=" videoplayer_element_onscreen "
-            onClick={toggleMute}
-          />
-        ) : (
-          <SpeakerWaveIcon
-            className=" videoplayer_element_onscreen text-white h-10 w-10 bg-gray-900 bg-opacity-10 backdrop-blur-md p-2 rounded-full"
-            onClick={toggleMute}
-          />
-        )}
-      </div>
+            <HeartIcon
+              onClick={handleLike}
+              className={`videoplayer_element_onscreen ${
+                liked && "text-[#FF0084] dark:text-[#FF0084]"
+              }`}
+            />
+            <HandThumbDownIcon
+              onClick={handleDislike}
+              className={`videoplayer_element_onscreen ${
+                !liked &&
+                "text-gray-900 bg-white bg-opacity-25 backdrop-blur-md"
+              }`}
+            />
+
+            <ChatBubbleBottomCenterTextIcon
+              onClick={() => {
+                setCommentBoxOpen(!commentBoxOpen);
+                console.log("commentSVGClick");
+              }}
+              className=" videoplayer_element_onscreen"
+            />
+            <EllipsisHorizontalCircleIcon className="videoplayer_element_onscreen " />
+            {isMuted ? (
+              <SpeakerXMarkIcon
+                className=" videoplayer_element_onscreen "
+                onClick={toggleMute}
+              />
+            ) : (
+              <SpeakerWaveIcon
+                className=" videoplayer_element_onscreen text-white h-10 w-10 bg-gray-900 bg-opacity-10 backdrop-blur-md p-2 rounded-full"
+                onClick={toggleMute}
+              />
+            )}
+          </div>
           <div className="absolute flex flex-col bottom-0 w-full ">
             <p className="text-base font-normal text-gray-100 px-4 py-1 truncate">
               {post.postTitle}
@@ -315,26 +327,28 @@ const VideoElement: React.FC<VideoElementProps> = ({
                 <p className="text-gray-100 text-sm">@{post.username}</p>
               </div>
               <div className="flex items-center">
-                {!isFollowing ? <button
-                type="button"
-                disabled={IsFollowLoading }
-                hidden ={post.userId == user.uid}
-                onClick={handleFollow}
-                className="px-3 py-1 rounded-full font-semibold text-gray-100 bg-systemGrayDark-400"
-              >
-                Follow
-              </button> :
-                <button
-                type="button"
-                disabled={IsFollowLoading }
-                hidden ={post.userId == user.uid}
-                onClick={handleUnfollow}
-                className="px-2 py-1 rounded-full font-semibold text-systemLbLight-400 bg-systemGrayLight-200"
-              >
-                Unfollow
-              </button>}
+                {!isFollowing ? (
+                  <button
+                    type="button"
+                    disabled={IsFollowLoading}
+                    hidden={post.userId == user.uid}
+                    onClick={handleFollow}
+                    className="px-3 py-1 rounded-full font-semibold text-gray-100 bg-systemGrayDark-400"
+                  >
+                    Follow
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    disabled={IsFollowLoading}
+                    hidden={post.userId == user.uid}
+                    onClick={handleUnfollow}
+                    className="px-2 py-1 rounded-full font-semibold text-systemLbLight-400 bg-systemGrayLight-200"
+                  >
+                    Unfollow
+                  </button>
+                )}
               </div>
-              
             </div>
             <div className="w-full bg-gray-200 rounded-full h-[2px] dark:bg-gray-700">
               <div
@@ -348,7 +362,9 @@ const VideoElement: React.FC<VideoElementProps> = ({
       <div className="hidden sm:flex flex-col justify-end p-3 space-y-8 rounded-md ">
         <HeartIcon
           onClick={handleLike}
-          className={`videoplayer_element ${liked && "text-[#FF0084] dark:text-[#FF0084]"}`}
+          className={`videoplayer_element ${
+            liked && "text-[#FF0084] dark:text-[#FF0084]"
+          }`}
         />
         <HandThumbDownIcon
           onClick={handleDislike}
@@ -356,13 +372,16 @@ const VideoElement: React.FC<VideoElementProps> = ({
             !liked && "text-white bg-gray-500"
           }`}
         />
-        
-        <ChatBubbleBottomCenterTextIcon onClick={()=>setCommentBoxOpen(!commentBoxOpen)} className=" videoplayer_element" />
+
+        <ChatBubbleBottomCenterTextIcon
+          onClick={() => setCommentBoxOpen(!commentBoxOpen)}
+          className=" videoplayer_element"
+        />
         <ArrowDownTrayIcon
           // onClick={handleDownload}
           className="  videoplayer_element cursor-not-allowed"
         />
-        <EllipsisHorizontalCircleIcon  className="videoplayer_element " />
+        <EllipsisHorizontalCircleIcon className="videoplayer_element " />
         {isMuted ? (
           <SpeakerXMarkIcon
             className=" videoplayer_element"
@@ -375,7 +394,9 @@ const VideoElement: React.FC<VideoElementProps> = ({
           />
         )}
       </div>
-      {commentBoxOpen && <CommentBox post={post} currentUser={user} />}
+      <div className="sm:flex  sm:h-full sm:static sm:z-10 z-30 absolute top-1/2  h-[50vh]">
+        {commentBoxOpen && <CommentBox post={post} currentUser={user} />}
+      </div>
     </div>
   );
 };

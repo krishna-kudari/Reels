@@ -63,7 +63,7 @@
 }
 
 #comment_box::-webkit-scrollbar-track {
-  background: #fff;
+  background: #00000000;
 }
 #comment_box::-webkit-scrollbar-thumb {
   background: rgb(130, 130, 130);
