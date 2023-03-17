@@ -394,7 +394,7 @@ const VideoElement: React.FC<VideoElementProps> = ({
           />
         )}
       </div>
-      <div className="sm:flex  sm:h-full sm:static sm:z-10 z-30 absolute top-1/2  h-[50vh]">
+      <div className="sm:flex  sm:h-full sm:static sm:z-10 z-30 absolute top-1/2 left-0 right-0 h-[50vh]">
         {commentBoxOpen && <CommentBox post={post} currentUser={user} />}
       </div>
     </div>
