@@ -153,7 +153,7 @@ export const AuthProvider: React.FC<ProviderProps> = ({ children }) => {
         if(docSnap.exists()) {
           console.log("USerData",);
           const userData = docSnap.data();
-          const currentUser = {...user , ...userData};
+          const currentUser = {...user , ...userData,password:""};
           setCurrentUser(currentUser);
           console.log(currentUser);
           setLoading(false);
