@@ -63,6 +63,7 @@ const VideoElement: React.FC<VideoElementProps> = ({
   user,
 }) => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const commentBoxRef = useRef<HTMLDivElement | null>(null);
   const {
     isPlaying,
     isMuted,
@@ -132,6 +133,21 @@ const VideoElement: React.FC<VideoElementProps> = ({
       cleanOb();
     };
   }, [reference]);
+
+  useEffect(() => {
+    const handleClickOutside = (event:any) => {
+      
+      if(commentBoxRef.current && !commentBoxRef.current.contains(event.target)){
+        // event.preventDefault();
+        setCommentBoxOpen(false);
+      }
+    }
+    window.addEventListener("mousedown",handleClickOutside);
+    return () => {
+      window.removeEventListener("mousedown",handleClickOutside);
+    }
+  }, [commentBoxRef])
+  
   useEffect(() => {
     const setFollowing = async () => {
       const q = query(
@@ -154,7 +170,7 @@ const VideoElement: React.FC<VideoElementProps> = ({
     togglePlay();
   };
 
-  const handleLike = async (e:React.SyntheticEvent) => {
+  const handleLike = async (e: React.SyntheticEvent) => {
     e.stopPropagation();
     if (!isActive) return;
     console.log("handleLike called", post.id);
@@ -174,7 +190,7 @@ const VideoElement: React.FC<VideoElementProps> = ({
       }
     }
   };
-  const handleDislike = async (e:React.SyntheticEvent) => {
+  const handleDislike = async (e: React.SyntheticEvent) => {
     e.stopPropagation();
     if (!isActive) return;
     console.log("handleDislike called", post.id);
@@ -243,7 +259,6 @@ const VideoElement: React.FC<VideoElementProps> = ({
   return (
     <div ref={reference} className="h-full flex justify-center space-x-1">
       <div
-        
         className="video-wrapper relative flex justify-center items-center overflow-hidden h-full w-[335px]  dark:bg-systemGrayDark-300 bg-slate-50 rounded-xl bg-center bg-cover bg-no-repeat"
         style={{ backgroundImage: `url(${post.postThumbnailUrl})` }}
       >
@@ -268,7 +283,10 @@ const VideoElement: React.FC<VideoElementProps> = ({
             alt="thumbnail"
           />
         )}
-        <div onClick={handleClick} className="sm:opacity-0 sm:hover:opacity-100 opacity-100 absolute z-20 bg-gradient-to-t bg-opacity-5 from-gray-900 via-transparent to-transparent w-full h-full">
+        <div
+          onClick={handleClick}
+          className="sm:opacity-0 sm:hover:opacity-100 opacity-100 absolute z-20 bg-gradient-to-t bg-opacity-5 from-gray-900 via-transparent to-transparent w-full h-full"
+        >
           {!isPlaying ? (
             <PlayIcon
               className=" absolute top-2 left-2 w-6 h-6 text-white cursor-pointer"
@@ -283,35 +301,42 @@ const VideoElement: React.FC<VideoElementProps> = ({
           <div className="sm:hidden  absolute right-0 top-1/2 transform-cpu -translate-y-1/2 flex flex-col justify-end p-3 space-y-8 rounded-md ">
             <HeartIcon
               onClick={handleLike}
-              className={`videoplayer_element_onscreen ${
+              className={`cursor-pointer videoplayer_element_onscreen ${
                 liked && "text-[#FF0084] dark:text-[#FF0084]"
               }`}
             />
             <HandThumbDownIcon
               onClick={handleDislike}
-              className={`videoplayer_element_onscreen ${
+              className={` cursor-pointer videoplayer_element_onscreen ${
                 !liked &&
                 "text-gray-900 bg-white bg-opacity-25 backdrop-blur-md"
               }`}
             />
 
             <ChatBubbleBottomCenterTextIcon
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation();
                 setCommentBoxOpen(!commentBoxOpen);
                 console.log("commentSVGClick");
               }}
-              className=" videoplayer_element_onscreen"
+              className="cursor-pointer videoplayer_element_onscreen"
             />
-            <EllipsisHorizontalCircleIcon className="videoplayer_element_onscreen " />
+            {/* <EllipsisHorizontalCircleIcon className="videoplayer_element_onscreen " /> */}
             {isMuted ? (
               <SpeakerXMarkIcon
-                className=" videoplayer_element_onscreen "
-                onClick={toggleMute}
+                className=" videoplayer_element_onscreen cursor-pointer "
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleMute();
+                }}
               />
             ) : (
               <SpeakerWaveIcon
-                className=" videoplayer_element_onscreen text-white h-10 w-10 bg-gray-900 bg-opacity-10 backdrop-blur-md p-2 rounded-full"
-                onClick={(e)=>{e.stopPropagation();toggleMute;}}
+                className="cursor-pointer videoplayer_element_onscreen text-white h-10 w-10 bg-gray-900 bg-opacity-10 backdrop-blur-md p-2 rounded-full"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleMute();
+                }}
               />
             )}
           </div>
@@ -320,19 +345,19 @@ const VideoElement: React.FC<VideoElementProps> = ({
               {post.postTitle}
             </p>
             <div className="flex justify-between px-4 pb-2">
-              <Link href={`/${post.username}/${post.userId}`}>
-              <div className="flex items-center space-x-1">
-                <div className="relative w-9 h-9 rounded-full overflow-hidden">
-                  <Image
-                    fill
-                    src={post.user_profile_pic_url}
-                    className="object-cover object-center"
-                    alt={"😍"}
+              <Link href={`/${post.username}?profileId=${post.userId}`}>
+                <div className="flex items-center space-x-1">
+                  <div className="relative w-9 h-9 rounded-full overflow-hidden">
+                    <Image
+                      fill
+                      src={post.user_profile_pic_url}
+                      className="object-cover object-center"
+                      alt={"😍"}
                     />
+                  </div>
+                  <p className="text-gray-100 text-sm">@{post.username}</p>
                 </div>
-                <p className="text-gray-100 text-sm">@{post.username}</p>
-              </div>
-                    </Link>
+              </Link>
               <div className="flex items-center">
                 {!isFollowing ? (
                   <button
@@ -340,7 +365,7 @@ const VideoElement: React.FC<VideoElementProps> = ({
                     disabled={IsFollowLoading}
                     hidden={post.userId == user.uid}
                     onClick={handleFollow}
-                    className="px-3 py-1 rounded-full font-semibold text-gray-100 bg-systemGrayDark-400"
+                    className="cursor-pointer px-3 py-1 rounded-full font-semibold text-gray-100 bg-systemGrayDark-400"
                   >
                     Follow
                   </button>
@@ -350,7 +375,7 @@ const VideoElement: React.FC<VideoElementProps> = ({
                     disabled={IsFollowLoading}
                     hidden={post.userId == user.uid}
                     onClick={handleUnfollow}
-                    className="px-2 py-1 rounded-full font-semibold text-systemLbLight-400 bg-systemGrayLight-200"
+                    className="cursor-pointer px-2 py-1 rounded-full font-semibold text-systemLbLight-400 bg-systemGrayLight-200"
                   >
                     Unfollow
                   </button>
@@ -401,9 +426,12 @@ const VideoElement: React.FC<VideoElementProps> = ({
           />
         )}
       </div>
-      <div className="sm:flex  sm:h-full sm:static sm:z-10 z-30 absolute top-1/2 left-0 right-0 h-[50vh]">
-        {commentBoxOpen && <CommentBox post={post} currentUser={user} />}
-      </div>
+
+      {commentBoxOpen && (
+        <div ref={commentBoxRef} className="sm:flex  sm:h-full sm:static sm:z-10 z-30 absolute top-1/2 left-0 right-0 h-[50vh]">
+          <CommentBox post={post} currentUser={user} />
+        </div>
+      )}
     </div>
   );
 };
