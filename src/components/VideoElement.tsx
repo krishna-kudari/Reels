@@ -43,6 +43,7 @@ import React, {
 import { uuidv4 } from "@firebase/util";
 import toast from "react-hot-toast";
 import CommentBox from "./CommentBox";
+import Link from "next/link";
 
 interface VideoElementProps {
   post: DocumentData & { id: string };
@@ -153,37 +154,41 @@ const VideoElement: React.FC<VideoElementProps> = ({
     togglePlay();
   };
 
-  const handleLike = async () => {
+  const handleLike = async (e:React.SyntheticEvent) => {
+    e.stopPropagation();
     if (!isActive) return;
     console.log("handleLike called", post.id);
     //animate
     if (!liked) {
       try {
+        setLiked(true);
         const postId = post.id;
         const postRef = doc(db, "posts", postId);
         await updateDoc(postRef, {
           likes: arrayUnion(user.uid),
         });
-        setLiked(true);
       } catch (error) {
+        setLiked(false);
         console.log("like Error", error);
         toast.error("whoops! something went wrong");
       }
     }
   };
-  const handleDislike = async () => {
+  const handleDislike = async (e:React.SyntheticEvent) => {
+    e.stopPropagation();
     if (!isActive) return;
     console.log("handleDislike called", post.id);
     //animate
     if (liked) {
       try {
+        setLiked(false);
         const postId = post.id;
         const postRef = doc(db, "posts", postId);
         await updateDoc(postRef, {
           likes: arrayRemove(user.uid),
         });
-        setLiked(false);
       } catch (error) {
+        setLiked(true);
         console.log("like Error", error);
         toast.error("whoops! something went wrong");
       }
@@ -238,7 +243,7 @@ const VideoElement: React.FC<VideoElementProps> = ({
   return (
     <div ref={reference} className="h-full flex justify-center space-x-1">
       <div
-        onClick={handleClick}
+        
         className="video-wrapper relative flex justify-center items-center overflow-hidden h-full w-[335px]  dark:bg-systemGrayDark-300 bg-slate-50 rounded-xl bg-center bg-cover bg-no-repeat"
         style={{ backgroundImage: `url(${post.postThumbnailUrl})` }}
       >
@@ -263,7 +268,7 @@ const VideoElement: React.FC<VideoElementProps> = ({
             alt="thumbnail"
           />
         )}
-        <div className="sm:opacity-0 sm:hover:opacity-100 opacity-100 absolute z-20 bg-gradient-to-t bg-opacity-5 from-gray-900 via-transparent to-transparent w-full h-full">
+        <div onClick={handleClick} className="sm:opacity-0 sm:hover:opacity-100 opacity-100 absolute z-20 bg-gradient-to-t bg-opacity-5 from-gray-900 via-transparent to-transparent w-full h-full">
           {!isPlaying ? (
             <PlayIcon
               className=" absolute top-2 left-2 w-6 h-6 text-white cursor-pointer"
@@ -306,7 +311,7 @@ const VideoElement: React.FC<VideoElementProps> = ({
             ) : (
               <SpeakerWaveIcon
                 className=" videoplayer_element_onscreen text-white h-10 w-10 bg-gray-900 bg-opacity-10 backdrop-blur-md p-2 rounded-full"
-                onClick={toggleMute}
+                onClick={(e)=>{e.stopPropagation();toggleMute;}}
               />
             )}
           </div>
@@ -315,6 +320,7 @@ const VideoElement: React.FC<VideoElementProps> = ({
               {post.postTitle}
             </p>
             <div className="flex justify-between px-4 pb-2">
+              <Link href={`/${post.username}/${post.userId}`}>
               <div className="flex items-center space-x-1">
                 <div className="relative w-9 h-9 rounded-full overflow-hidden">
                   <Image
@@ -322,10 +328,11 @@ const VideoElement: React.FC<VideoElementProps> = ({
                     src={post.user_profile_pic_url}
                     className="object-cover object-center"
                     alt={"😍"}
-                  />
+                    />
                 </div>
                 <p className="text-gray-100 text-sm">@{post.username}</p>
               </div>
+                    </Link>
               <div className="flex items-center">
                 {!isFollowing ? (
                   <button
