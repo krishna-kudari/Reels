@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { reels_mark, reels_mark_solid } from "@/../public/assets";
 import {
@@ -63,6 +63,12 @@ const Signin: React.FC<signinProps> = ({}) => {
     setAuthAction("Login");
   };
 
+  useEffect(() => {
+    if(currentUser){
+      router.replace("/");
+    }
+  }, [currentUser])
+  
   //Login Form OnSubmit
   const onSubmit = handleSubmit(async (data) => {
     console.log("LoginFormData", data);
