@@ -71,7 +71,7 @@ export const AuthProvider: React.FC<ProviderProps> = ({ children }) => {
   //AuthProvider mwthods
   const signinWithGoogle = () => {
     signInWithPopup(auth, googleprovider)
-      .then(async(result) => {
+      .then(async (result) => {
         // This gives you a Google Access Token. You can use it to access the Google API.
         const credential = GoogleAuthProvider.credentialFromResult(result);
         if (!credential) throw new Error("No credential");
@@ -80,17 +80,21 @@ export const AuthProvider: React.FC<ProviderProps> = ({ children }) => {
         const user = result.user;
         // IdP data available using getAdditionalUserInfo(result)
         // ...
-        const {email , photoURL , uid , displayName} = user;
-        const userDoc = {
-          username : displayName,
-          email: email,
-          password: "",
-          profile_picture_url: photoURL,
-          userId : uid,
-          posts : []
+        const userRef = doc(db, "users", user.uid);
+        const docsnap = await getDoc(userRef);
+        if (!docsnap.exists()) {
+          const { email, photoURL, uid, displayName } = user;
+          const userDoc = {
+            username: displayName,
+            email: email,
+            password: "",
+            profile_picture_url: photoURL,
+            userId: uid,
+            posts: [],
+          };
+          await setDoc(doc(db, "users", uid), userDoc);
         }
-        await setDoc(doc(db, "users", uid), userDoc);
-        // toast.success("account created");
+        toast.success("logged in");
         console.log(user);
         router.replace("/");
       })
@@ -108,7 +112,7 @@ export const AuthProvider: React.FC<ProviderProps> = ({ children }) => {
   };
   const signinWithGitHub = () => {
     signInWithPopup(auth, githubprovider)
-      .then(async(result) => {
+      .then(async (result) => {
         // This gives you a GitHub Access Token. You can use it to access the GitHub API.
         const credential = GithubAuthProvider.credentialFromResult(result);
         if (!credential) throw new Error("No credential");
@@ -118,18 +122,23 @@ export const AuthProvider: React.FC<ProviderProps> = ({ children }) => {
         const user = result.user;
         // IdP data available using getAdditionalUserInfo(result)
         // ...
-        const {email , photoURL , uid , displayName} = user;
-        const userDoc = {
-          username : displayName,
-          email: email,
-          password: "",
-          profile_picture_url: photoURL,
-          userId : uid,
-          posts : []
+        const userRef = doc(db, "users", user.uid);
+        const docsnap = await getDoc(userRef);
+        if (!docsnap.exists()) {
+          const { email, photoURL, uid, displayName } = user;
+          const userDoc = {
+            username: displayName,
+            email: email,
+            password: "",
+            profile_picture_url: photoURL,
+            userId: uid,
+            posts: [],
+          };
+          await setDoc(doc(db, "users", uid), userDoc);
         }
-        await setDoc(doc(db, "users", uid), userDoc);
-        // toast.success("account created");
-        router.replace("/")
+
+        toast.success("logged in");
+        router.replace("/");
       })
       .catch((error: any) => {
         // Handle Errors here.
@@ -146,25 +155,24 @@ export const AuthProvider: React.FC<ProviderProps> = ({ children }) => {
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
-      console.log("AuthState changed",user);
-      if(user) {
-        const docRef = doc(db,"users",user.uid);
-        const docSnap =await getDoc(docRef);
-        if(docSnap.exists()) {
-          console.log("USerData",);
+      console.log("AuthState changed", user);
+      if (user) {
+        const docRef = doc(db, "users", user.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          console.log("USerData");
           const userData = docSnap.data();
-          const currentUser = {...user , ...userData,password:""};
+          const currentUser = { ...user, ...userData, password: "" };
           setCurrentUser(currentUser);
           console.log(currentUser);
           setLoading(false);
-        }else{
+        } else {
           setLoading(false);
         }
-      }else{
+      } else {
         setCurrentUser(null);
         setLoading(false);
       }
-      
     });
     return unsubscribe;
   }, []);
@@ -179,9 +187,5 @@ export const AuthProvider: React.FC<ProviderProps> = ({ children }) => {
     loading,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      { children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
